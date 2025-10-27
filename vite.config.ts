@@ -4,7 +4,7 @@ import path from "path";
 
 
 export default defineConfig(({ mode }) => ({
-  base: '/',
+  base: '/qkd_simulation/',
   server: {
     host: "::",
     port: 8080,

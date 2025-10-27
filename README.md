@@ -179,10 +179,10 @@ This simulator is perfect for:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/bb84-qkd-simulator.git
+git clone https://github.com/PRODHOSH/qkd_simulation
 
 # Navigate to project directory
-cd bb84-qkd-simulator
+cd qkd_simulation
 
 # Open in browser
 open index.html
@@ -291,9 +291,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **Your Name**
 
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github)](https://github.com/yourusername)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/yourprofile)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-FF6B6B?style=for-the-badge&logo=google-chrome&logoColor=white)](https://yourportfolio.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github)](https://github.com/PRODHOSH)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/prodhoshvs)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-FF6B6B?style=for-the-badge&logo=google-chrome&logoColor=white)](https://prodhosh.github.io/portfolio/)
 
 ---
 

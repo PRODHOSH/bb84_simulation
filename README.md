@@ -190,7 +190,7 @@ open index.html
 
 ### Live Demo
 
-🌐 **[Try it Live on Lovable](your-lovable-link-here)**
+🌐 **[Check it out !](https://prodhosh.github.io/qkd_simulation/)**
 
 ### Usage Instructions
 

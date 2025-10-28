@@ -55,16 +55,16 @@ const Home = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="border-primary/30 hover:bg-primary/10"
+                className="border-primary/30 hover:bg-primary/10 hover:text-white"
               >
                 Learn the Theory
               </Button>
             </Link>
-            <a href="team.html" target="_blank" rel="noopener noreferrer">
+            <a href="team.html">
               <Button 
                 size="lg" 
                 variant="outline"
-                className="border-accent/30 hover:bg-accent/10 hover:border-accent/50 group"
+                className="border-accent/30 hover:bg-accent/10 hover:border-accent/50 hover:text-white group"
               >
                 <Users className="mr-2 w-5 h-5" />
                 Meet the Team

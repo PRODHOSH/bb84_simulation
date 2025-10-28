@@ -209,6 +209,79 @@
             font-size: 0.75rem;
         }
 
+        .team-card img {
+            border: 3px solid;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .primary img {
+            border-color: hsl(230, 85%, 60%);
+        }
+
+        .accent img {
+            border-color: hsl(190, 95%, 60%);
+        }
+
+        .secondary img {
+            border-color: hsl(270, 70%, 55%);
+        }
+
+        .success img {
+            border-color: hsl(140, 70%, 55%);
+        }
+
+        /* Modal for zoomed image */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 1rem;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            z-index: 1001;
+            transition: transform 0.2s ease;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.2);
+        }
+
         .card-header {
             display: flex;
             align-items: center;
@@ -586,6 +659,12 @@
         </div>
     </div>
 
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
     <script>
         // Generate animated stars
         const starsContainer = document.getElementById('stars');
@@ -597,6 +676,40 @@
             star.style.animationDelay = Math.random() * 3 + 's';
             starsContainer.appendChild(star);
         }
+
+        // Image zoom modal functionality
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeModal = document.getElementById('closeModal');
+
+        // Add click event to all team card images
+        document.querySelectorAll('.team-card img').forEach(img => {
+            img.addEventListener('click', function(e) {
+                e.stopPropagation();
+                modal.classList.add('active');
+                modalImg.src = this.src;
+                modalImg.alt = this.alt;
+            });
+        });
+
+        // Close modal when clicking the X
+        closeModal.addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside the image
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>

@@ -60,7 +60,7 @@ const Home = () => {
                 Learn the Theory
               </Button>
             </Link>
-            <Link to="/team">
+            <a href="team.html" target="_blank" rel="noopener noreferrer">
               <Button 
                 size="lg" 
                 variant="outline"
@@ -69,7 +69,7 @@ const Home = () => {
                 <Users className="mr-2 w-5 h-5" />
                 Meet the Team
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
 

@@ -7,7 +7,6 @@ import { SimulationProvider } from "./contexts/SimulationContext";
 import Home from "./pages/Home";
 import Theory from "./pages/Theory";
 import Simulation from "./pages/Simulation";
-import Team from "./pages/Team";
 import NotFound from "./pages/NotFound";
 
 
@@ -25,7 +24,6 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/theory" element={<Theory />} />
           <Route path="/simulation" element={<Simulation />} />
-          <Route path="/team" element={<Team />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

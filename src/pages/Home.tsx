@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Lock, Atom, Sparkles } from "lucide-react";
+import { ArrowRight, Lock, Atom, Sparkles, Users } from "lucide-react";
 
 
 const Home = () => {
@@ -58,6 +58,16 @@ const Home = () => {
                 className="border-primary/30 hover:bg-primary/10"
               >
                 Learn the Theory
+              </Button>
+            </Link>
+            <Link to="/team">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-accent/30 hover:bg-accent/10 hover:border-accent/50 group"
+              >
+                <Users className="mr-2 w-5 h-5" />
+                Meet the Team
               </Button>
             </Link>
           </div>

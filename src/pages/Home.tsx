@@ -32,7 +32,7 @@ const Home = () => {
           <h1 className="text-5xl md:text-7xl font-bold bg-gradient-quantum bg-clip-text text-transparent leading-tight">
             BB84 Protocol
             <br />
-            <span className="text-4xl md:text-6xl">3D Visualization</span>
+            <span className="text-4xl md:text-6xl">3D Simulator</span>
           </h1>
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">

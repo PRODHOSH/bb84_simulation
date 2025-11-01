@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Theory from "./pages/Theory";
 import Simulation from "./pages/Simulation";
 import NotFound from "./pages/NotFound";
+import Starfield from "@/components/ui/Starfield";
 
 
 
@@ -18,6 +19,8 @@ const App = () => (
     <TooltipProvider>
       <SimulationProvider>
         <Toaster />
+        {/* global SPA starfield overlay (behind content) */}
+        <Starfield />
         <Sonner />
         <HashRouter>
           <Routes>

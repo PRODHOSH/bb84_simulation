@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { PhotonData } from "@/hooks/useBB84Simulation";
+import { Button } from "@/components/ui/button";
 
 interface KeyResultsProps {
   photons: PhotonData[];
@@ -10,6 +11,58 @@ interface KeyResultsProps {
 
 
 const KeyResults = ({ photons, secretKey, errorRate }: KeyResultsProps) => {
+
+  const exportJSON = () => {
+    const payload = {
+      generatedAt: new Date().toISOString(),
+      secretKey,
+      errorRate,
+      photons,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `bb84_results_${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportCSV = () => {
+    const header = [
+      "id",
+      "aliceBit",
+      "aliceBasis",
+      "bobBasis",
+      "bobBit",
+      "basesMatch",
+      "polarization",
+      "eveIntercepted",
+      "eveIntroducedError",
+    ];
+
+    const rows = photons.map((p) => [
+      p.id,
+      p.aliceBit,
+      p.aliceBasis,
+      p.bobBasis,
+      p.bobBit == null ? "" : p.bobBit,
+      p.basesMatch,
+      p.polarization,
+      p.eveIntercepted ? "true" : "false",
+      p.eveIntroducedError ? "true" : "false",
+    ]);
+
+    const csv = [header, ...rows].map((r) => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `bb84_results_${new Date().toISOString().replace(/[:.]/g, "-")}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6">
       {/* Secret Key Display */}
@@ -33,6 +86,15 @@ const KeyResults = ({ photons, secretKey, errorRate }: KeyResultsProps) => {
           ) : (
             <span className="text-muted-foreground">No key generated yet.</span>
           )}
+        </div>
+        {/* Export buttons */}
+        <div className="mt-4 flex gap-3">
+          <Button size="sm" className="bg-gradient-quantum" onClick={exportCSV}>
+            Export CSV
+          </Button>
+          <Button size="sm" variant="outline" onClick={exportJSON}>
+            Export JSON
+          </Button>
         </div>
         <div className="mt-4 flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Key Length: {secretKey.length} bits</span>

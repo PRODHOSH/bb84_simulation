@@ -8,12 +8,12 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Quantum Space Theme - Deep cosmic background */
-    --background: 240 40% 6%;
-    --foreground: 210 100% 95%;
+    /* Quantum Space Theme - Deep cosmic background (near-black) */
+    --background: 0 0% 0%; /* pure black */
+    --foreground: 210 100% 98%;
 
-    --card: 240 35% 10%;
-    --card-foreground: 210 100% 95%;
+  --card: 240 20% 8%;
+  --card-foreground: 210 100% 98%;
 
     --popover: 240 35% 10%;
     --popover-foreground: 210 100% 95%;
@@ -27,8 +27,8 @@ All colors MUST be HSL.
     --secondary: 270 70% 55%;
     --secondary-foreground: 210 100% 95%;
 
-    --muted: 240 30% 20%;
-    --muted-foreground: 220 20% 65%;
+  --muted: 240 20% 12%;
+  --muted-foreground: 220 10% 60%;
 
     /* Cyan for photons and highlights */
     --accent: 190 95% 60%;
@@ -49,13 +49,22 @@ All colors MUST be HSL.
     --radius: 0.75rem;
 
     /* Custom quantum gradients */
-    --gradient-quantum: linear-gradient(135deg, hsl(230 85% 60%), hsl(270 70% 55%));
-    --gradient-photon: linear-gradient(90deg, hsl(190 95% 60%), hsl(230 85% 60%));
+  --gradient-quantum: linear-gradient(135deg, rgba(40,110,255,0.95), rgba(170,80,255,0.95));
+  --gradient-photon: linear-gradient(90deg, rgba(0,240,255,0.95), rgba(40,110,255,0.95));
     
     /* Glow effects */
     --glow-primary: 0 0 20px hsl(230 85% 60% / 0.5);
     --glow-accent: 0 0 20px hsl(190 95% 60% / 0.5);
     --glow-success: 0 0 20px hsl(140 70% 55% / 0.5);
+    /* Polarization colors (primary hex + translucent bg variants) */
+    --polar-vertical: #00f0ff;
+    --polar-vertical-bg: rgba(0,240,255,0.08);
+    --polar-horizontal: #60a5fa;
+    --polar-horizontal-bg: rgba(96,165,250,0.08);
+    --polar-diagonal: #a855f7;
+    --polar-diagonal-bg: rgba(168,85,247,0.08);
+    --polar-antidiagonal: #ff6ec7;
+    --polar-antidiagonal-bg: rgba(255,110,199,0.08);
   }
 }
 
@@ -66,5 +75,121 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* Use smooth font rendering and preserve a slightly larger default line-height for readability on dark bg */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
   }
+}
+
+@layer components {
+  /* Quantum themed background helper with subtle nebula and stars */
+  .quantum-bg {
+    background: radial-gradient(1200px 600px at 15% 10%, rgba(170,80,255,0.08), transparent 8%),
+                radial-gradient(900px 500px at 85% 90%, rgba(40,110,255,0.06), transparent 10%),
+                linear-gradient(180deg, rgba(0,0,0,1), rgba(6,6,12,1));
+  }
+
+  /* Simple starfield overlay used by home hero but reusable */
+  .starfield {
+    position: fixed; /* cover the full viewport */
+    inset: 0;
+    pointer-events: none;
+    /* Dense, small colorful particles similar to screenshot 2 */
+    background-image:
+      radial-gradient(circle at 2% 5%, rgba(255,255,255,0.98) 0.6px, transparent 0.8px),
+      radial-gradient(circle at 22% 18%, rgba(0,240,200,0.95) 0.6px, transparent 0.8px),
+      radial-gradient(circle at 40% 40%, rgba(168,85,247,0.92) 0.6px, transparent 0.8px),
+      radial-gradient(circle at 60% 25%, rgba(255,210,80,0.9) 0.6px, transparent 0.8px),
+      radial-gradient(circle at 80% 70%, rgba(255,128,200,0.9) 0.6px, transparent 0.8px);
+    background-size: 220px 220px, 180px 180px, 140px 140px, 320px 320px, 160px 160px;
+    background-position: 0% 0%, 10% 20%, 30% 10%, 60% 80%, 5% 75%;
+    opacity: 0.26;
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.03));
+    animation: twinkle 6.5s linear infinite, drift 40s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.09; transform: translateZ(0) scale(1); }
+    50% { opacity: 0.18; transform: translateZ(0) scale(1.02); }
+  }
+
+  @keyframes drift {
+    0% { background-position: 0% 0%, 10% 20%, 30% 10%, 60% 80%, 5% 75%; }
+    50% { background-position: 30% 10%, 40% 35%, 10% 50%, 30% 60%, 45% 20%; }
+    100% { background-position: 0% 0%, 10% 20%, 30% 10%, 60% 80%, 5% 75%; }
+  }
+
+  .glow-primary {
+    box-shadow: var(--glow-primary);
+  }
+
+  .bg-gradient-quantum {
+    background-image: var(--gradient-quantum);
+  }
+
+  /* Utility: gradient text using the quantum gradient */
+  .gradient-text {
+    background-image: var(--gradient-quantum);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Apply gradient to main headings site-wide for a consistent quantum look */
+  h1, h2, h3, h4 {
+    background-image: var(--gradient-quantum);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* Neon text styles for headings */
+  .neon-text {
+    background-image: var(--gradient-quantum);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 6px rgba(170,80,255,0.12), 0 0 12px rgba(40,110,255,0.06);
+  }
+
+  .neon-heading {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 10px rgba(40,110,255,0.18), 0 0 24px rgba(170,80,255,0.12);
+  }
+
+  /* Small glowing text */
+  .glow-text {
+    color: var(--foreground);
+    text-shadow: 0 0 8px rgba(0,240,255,0.06);
+  }
+
+  /* Spinning quantum logo */
+  .spin-logo {
+    display: inline-block;
+    transform-origin: center;
+    animation: spin-logo 4s linear infinite;
+  }
+
+  @keyframes spin-logo {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Polarization color helpers */
+  .polar-vertical { color: var(--polar-vertical); }
+  .polar-horizontal { color: var(--polar-horizontal); }
+  .polar-diagonal { color: var(--polar-diagonal); }
+  .polar-antidiagonal { color: var(--polar-antidiagonal); }
+
+  .polar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .polar-dot { width: 12px; height: 12px; border-radius: 9999px; display:inline-block }
 }

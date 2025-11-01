@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars, Text } from "@react-three/drei";
+import { useMemo } from "react";
 import PhotonParticle from "./PhotonParticle";
 import { PhotonData } from "@/hooks/useBB84Simulation";
 
@@ -10,6 +11,21 @@ interface PhotonSceneProps {
 
 
 const PhotonScene = ({ photons, currentPhotonIndex }: PhotonSceneProps) => {
+  const polarColors = useMemo(() => {
+    if (typeof window === "undefined") return {
+      horizontal: "#60a5fa",
+      diagonal: "#a855f7",
+      vertical: "#00f0ff",
+      antidiagonal: "#ff6ec7",
+    };
+    const css = getComputedStyle(document.documentElement);
+    return {
+      horizontal: css.getPropertyValue("--polar-horizontal").trim() || "#60a5fa",
+      diagonal: css.getPropertyValue("--polar-diagonal").trim() || "#a855f7",
+      vertical: css.getPropertyValue("--polar-vertical").trim() || "#00f0ff",
+      antidiagonal: css.getPropertyValue("--polar-antidiagonal").trim() || "#ff6ec7",
+    };
+  }, []);
   return (
     <div className="w-full h-[600px] bg-background rounded-lg overflow-hidden border border-border">
       <Canvas camera={{ position: [0, 2, 8], fov: 50 }}>
@@ -17,8 +33,8 @@ const PhotonScene = ({ photons, currentPhotonIndex }: PhotonSceneProps) => {
         
         {/* Lighting */}
         <ambientLight intensity={0.3} />
-        <pointLight position={[-5, 5, 5]} intensity={1} color="#60a5fa" />
-        <pointLight position={[5, 5, 5]} intensity={1} color="#a855f7" />
+  <pointLight position={[-5, 5, 5]} intensity={1} color={polarColors.horizontal} />
+  <pointLight position={[5, 5, 5]} intensity={1} color={polarColors.diagonal} />
         
         {/* Stars background */}
         <Stars
@@ -35,12 +51,12 @@ const PhotonScene = ({ photons, currentPhotonIndex }: PhotonSceneProps) => {
         <group position={[-4, 0, 0]}>
           <mesh>
             <boxGeometry args={[0.5, 0.5, 0.5]} />
-            <meshStandardMaterial color="#60a5fa" emissive="#60a5fa" emissiveIntensity={0.5} />
+            <meshStandardMaterial color={polarColors.horizontal} emissive={polarColors.horizontal} emissiveIntensity={0.5} />
           </mesh>
           <Text
             position={[0, -0.8, 0]}
             fontSize={0.3}
-            color="#60a5fa"
+            color={polarColors.horizontal}
             anchorX="center"
             anchorY="middle"
           >
@@ -52,12 +68,12 @@ const PhotonScene = ({ photons, currentPhotonIndex }: PhotonSceneProps) => {
         <group position={[4, 0, 0]}>
           <mesh>
             <boxGeometry args={[0.5, 0.5, 0.5]} />
-            <meshStandardMaterial color="#a855f7" emissive="#a855f7" emissiveIntensity={0.5} />
+            <meshStandardMaterial color={polarColors.diagonal} emissive={polarColors.diagonal} emissiveIntensity={0.5} />
           </mesh>
           <Text
             position={[0, -0.8, 0]}
             fontSize={0.3}
-            color="#a855f7"
+            color={polarColors.diagonal}
             anchorX="center"
             anchorY="middle"
           >

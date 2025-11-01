@@ -454,7 +454,8 @@
 
     <div class="container">
         <!-- Back Button -->
-        <a href="index.html" class="back-button" target="_self">
+        <!-- Use hash route so the SPA (React HashRouter) handles navigation -->
+        <a href="/#/" class="back-button" target="_self">
             <span>←</span> Back to Home
         </a>
 
@@ -669,12 +670,28 @@
     <script>
         // Generate animated stars
         const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 50; i++) {
+        const palette = [
+            'rgba(255,255,255,0.95)',
+            'rgba(255,128,200,0.9)',
+            'rgba(0,240,200,0.85)',
+            'rgba(255,210,80,0.8)',
+            'rgba(120,80,255,0.82)'
+        ];
+        for (let i = 0; i < 70; i++) {
             const star = document.createElement('div');
             star.className = 'star';
             star.style.left = Math.random() * 100 + '%';
             star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDelay = Math.random() * 4 + 's';
+            // pick a color from the palette
+            const color = palette[Math.floor(Math.random() * palette.length)];
+            star.style.background = color;
+            // subtle glow using box-shadow with same tint
+            star.style.boxShadow = `0 0 ${4 + Math.random() * 8}px ${color}`;
+            // random size for variation
+            const size = 1 + Math.floor(Math.random() * 3);
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
             starsContainer.appendChild(star);
         }
 

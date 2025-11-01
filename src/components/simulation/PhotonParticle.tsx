@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { Polarization } from "@/hooks/useBB84Simulation";
@@ -26,6 +26,46 @@ const PhotonParticle = ({
   const getColor = () => {
     if (!isActive) return "#444444";
     return basesMatch ? "#22c55e" : "#ef4444"; // green or red
+  };
+
+  // Read polarization colors from CSS variables so they can be changed globally
+  const polarVars = useMemo(() => {
+    if (typeof window === "undefined") {
+      return {
+        vertical: "#00f0ff",
+        horizontal: "#60a5fa",
+        diagonal: "#a855f7",
+        antidiagonal: "#ff6ec7",
+      };
+    }
+    const css = getComputedStyle(document.documentElement);
+    return {
+      vertical: css.getPropertyValue("--polar-vertical").trim() || "#00f0ff",
+      horizontal: css.getPropertyValue("--polar-horizontal").trim() || "#60a5fa",
+      diagonal: css.getPropertyValue("--polar-diagonal").trim() || "#a855f7",
+      antidiagonal: css.getPropertyValue("--polar-antidiagonal").trim() || "#ff6ec7",
+    };
+  }, []);
+
+  const getCoreColor = () => {
+    switch (polarization) {
+      case "vertical":
+        return polarVars.vertical;
+      case "horizontal":
+        return polarVars.horizontal;
+      case "diagonal":
+        return polarVars.diagonal;
+      case "antidiagonal":
+        return polarVars.antidiagonal;
+      default:
+        return "#9ca3af";
+    }
+  };
+
+  const getGlowColor = () => {
+    // Keep match/mismatch glow semantics but slightly tinted so polarization remains visible
+    if (!isActive) return "#222222";
+    return basesMatch ? "#22c55e" : "#ef4444";
   };
 
   const getRotation = (): [number, number, number] => {
@@ -63,9 +103,9 @@ const PhotonParticle = ({
       <mesh ref={glowRef}>
         <sphereGeometry args={[0.15, 16, 16]} />
         <meshBasicMaterial
-          color={getColor()}
+          color={getGlowColor()}
           transparent
-          opacity={isActive ? 0.3 : 0.1}
+          opacity={isActive ? 0.28 : 0.08}
         />
       </mesh>
       
@@ -73,9 +113,9 @@ const PhotonParticle = ({
       <mesh ref={meshRef}>
         <sphereGeometry args={[0.08, 16, 16]} />
         <meshStandardMaterial
-          color={getColor()}
-          emissive={getColor()}
-          emissiveIntensity={isActive ? 2 : 0.5}
+          color={getCoreColor()}
+          emissive={getCoreColor()}
+          emissiveIntensity={isActive ? 2 : 0.6}
           metalness={0.8}
           roughness={0.2}
         />
@@ -85,9 +125,9 @@ const PhotonParticle = ({
       <mesh position={[0, 0.15, 0]}>
         <coneGeometry args={[0.03, 0.1, 8]} />
         <meshStandardMaterial
-          color={getColor()}
-          emissive={getColor()}
-          emissiveIntensity={isActive ? 1.5 : 0.3}
+          color={getCoreColor()}
+          emissive={getCoreColor()}
+          emissiveIntensity={isActive ? 1.2 : 0.25}
         />
       </mesh>
     </group>

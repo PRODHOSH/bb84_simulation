@@ -7,8 +7,9 @@ import { Card } from "@/components/ui/card";
 
 const Theory = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
+    <div className="min-h-screen quantum-bg">
+      <div className="starfield" />
+      <div className="container mx-auto px-4 py-12 max-w-4xl relative z-10">
         <Link to="/">
           <Button variant="ghost" className="mb-8">
             <ArrowLeft className="mr-2 w-4 h-4" />
@@ -16,44 +17,44 @@ const Theory = () => {
           </Button>
         </Link>
 
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-quantum bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
           BB84 Quantum Key Distribution Protocol
         </h1>
 
         <div className="space-y-8">
-          <Card className="p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-primary">What is BB84?</h2>
-            <p className="text-foreground/90 leading-relaxed">
+          <Card className="p-6 bg-card/70 backdrop-blur-sm">
+            <h2 className="text-2xl md:text-3xl neon-text neon-heading mb-4">What is BB84?</h2>
+            <p className="text-white/85 leading-relaxed">
               BB84 is the first quantum key distribution protocol, invented by Charles Bennett and Gilles Brassard in 1984. 
               It uses quantum mechanics to establish a secret key between two parties (Alice and Bob) in a way that detects 
               any eavesdropping attempts by a third party (Eve).
             </p>
           </Card>
 
-          <Card className="p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-accent">Photon Polarization Bases</h2>
-            <p className="text-foreground/90 mb-4">
-              BB84 uses two measurement bases for photon polarization:
+          <Card className="p-6 bg-card/70 backdrop-blur-sm">
+            <h2 className="text-2xl md:text-3xl neon-text neon-heading mb-4">Photon Polarization Bases</h2>
+            <p className="text-white/85 mb-4">
+              BB84 uses two measurement bases for photon polarization. Below the polarization names are color-coded to match the 3D scene and legends.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 bg-muted rounded-lg">
+              <div className="p-4 bg-muted/70 rounded-lg">
                 <h3 className="font-semibold text-lg mb-2 text-primary">Rectilinear Basis (+)</h3>
                 <ul className="space-y-2 text-sm">
-                  <li>• <span className="text-accent">Vertical (|)</span> = Bit 0</li>
-                  <li>• <span className="text-accent">Horizontal (—)</span> = Bit 1</li>
+                  <li>• <span className="polar-badge"><span className="polar-dot" style={{background:'var(--polar-vertical)'}}></span><span className="polar-vertical">Vertical (|)</span></span> = Bit 0</li>
+                  <li>• <span className="polar-badge"><span className="polar-dot" style={{background:'var(--polar-horizontal)'}}></span><span className="polar-horizontal">Horizontal (—)</span></span> = Bit 1</li>
                 </ul>
               </div>
-              <div className="p-4 bg-muted rounded-lg">
+              <div className="p-4 bg-muted/70 rounded-lg">
                 <h3 className="font-semibold text-lg mb-2 text-secondary">Diagonal Basis (×)</h3>
                 <ul className="space-y-2 text-sm">
-                  <li>• <span className="text-accent">Diagonal (/)</span> = Bit 0</li>
-                  <li>• <span className="text-accent">Anti-diagonal (\)</span> = Bit 1</li>
+                  <li>• <span className="polar-badge"><span className="polar-dot" style={{background:'var(--polar-diagonal)'}}></span><span className="polar-diagonal">Diagonal (/)</span></span> = Bit 0</li>
+                  <li>• <span className="polar-badge"><span className="polar-dot" style={{background:'var(--polar-antidiagonal)'}}></span><span className="polar-antidiagonal">Anti-diagonal (\)</span></span> = Bit 1</li>
                 </ul>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 bg-card/70 backdrop-blur-sm">
             <h2 className="text-2xl font-semibold mb-4 text-secondary">Protocol Steps</h2>
             <ol className="space-y-4 text-foreground/90">
               <li className="flex gap-3">

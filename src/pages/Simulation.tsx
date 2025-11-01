@@ -53,8 +53,9 @@ const Simulation = () => {
   const errorRate = getErrorRate();
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen quantum-bg">
+      <div className="starfield" />
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <Link to="/">
           <Button variant="ghost" className="mb-6">
             <ArrowLeft className="mr-2 w-4 h-4" />
@@ -64,21 +65,21 @@ const Simulation = () => {
 
         <div className="max-w-7xl mx-auto space-y-6">
           <div>
-            <h1 className="text-4xl font-bold mb-2 bg-gradient-quantum bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold mb-2 gradient-text">
               Quantum Key Distribution Simulator
             </h1>
-            <p className="text-muted-foreground">
+              <p className="text-white/85">
               Interactive BB84 protocol with real-time 3D visualization and analytics
             </p>
           </div>
 
           {/* Simulation Controls */}
-          <Card className="p-6">
+          <Card className="p-6 bg-card/70 backdrop-blur-sm">
             <h3 className="text-lg font-semibold mb-4">Simulation Controls</h3>
             <div className="space-y-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="photon-count">Number of Photons: {photonCount}</Label>
+                  <Label htmlFor="photon-count" className="text-white/90">Number of Photons: {photonCount}</Label>
                 </div>
                 <Slider
                   id="photon-count"
@@ -108,7 +109,7 @@ const Simulation = () => {
                 <Button
                   onClick={handleStart}
                   disabled={isSimulating && currentPhotonIndex < photons.length - 1}
-                  className="bg-gradient-quantum flex-1"
+                  className="bg-gradient-quantum flex-1 glow-primary"
                 >
                   <Play className="mr-2 w-4 h-4" />
                   {isSimulating ? "Running Simulation..." : "Run Simulation"}
@@ -141,13 +142,27 @@ const Simulation = () => {
                     <div className="w-3 h-3 rounded-full bg-destructive"></div>
                     <span>Bases Differ</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-primary"></div>
-                    <span>Alice</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-secondary"></div>
-                    <span>Bob</span>
+
+                  {/* Polarization legend */}
+                  <div className="flex items-center gap-3 md:col-span-2">
+                    <div className="flex gap-3 items-center flex-wrap">
+                      <div className="flex items-center gap-2">
+                        <div style={{width:12,height:12,background:'var(--polar-vertical)',borderRadius:6}} />
+                        <span className="text-sm">Vertical (|)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div style={{width:12,height:12,background:'var(--polar-horizontal)',borderRadius:6}} />
+                        <span className="text-sm">Horizontal (—)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div style={{width:12,height:12,background:'var(--polar-diagonal)',borderRadius:6}} />
+                        <span className="text-sm">Diagonal (/)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div style={{width:12,height:12,background:'var(--polar-antidiagonal)',borderRadius:6}} />
+                        <span className="text-sm">Anti-diagonal (\)</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Card>

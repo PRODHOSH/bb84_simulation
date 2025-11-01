@@ -63,12 +63,13 @@ const KeyResults = ({ photons, secretKey, errorRate }: KeyResultsProps) => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-2">#</th>
-                <th className="text-left p-2">Alice Bit</th>
-                <th className="text-left p-2">Alice Basis</th>
-                <th className="text-left p-2">Bob Basis</th>
-                <th className="text-left p-2">Bob Bit</th>
-                <th className="text-left p-2">Result</th>
+                  <th className="text-left p-2">#</th>
+                  <th className="text-left p-2">Alice Bit</th>
+                  <th className="text-left p-2">Alice Basis</th>
+                  <th className="text-left p-2">Bob Basis</th>
+                  <th className="text-left p-2">Polarization</th>
+                  <th className="text-left p-2">Bob Bit</th>
+                  <th className="text-left p-2">Result</th>
               </tr>
             </thead>
             <tbody>
@@ -91,6 +92,26 @@ const KeyResults = ({ photons, secretKey, errorRate }: KeyResultsProps) => {
                       {photon.bobBasis === "rectilinear" ? "+" : "×"}
                     </span>
                   </td>
+                    <td className="p-2">
+                      {/* Color-coded polarization badge */}
+                      <span
+                        className="inline-flex items-center gap-2 px-2 py-1 rounded text-xs font-medium"
+                        style={{
+                            background: photon.polarization === 'vertical' ? 'var(--polar-vertical-bg)'
+                              : photon.polarization === 'horizontal' ? 'var(--polar-horizontal-bg)'
+                              : photon.polarization === 'diagonal' ? 'var(--polar-diagonal-bg)'
+                              : 'var(--polar-antidiagonal-bg)'
+                          }}
+                      >
+                        <span style={{width:10,height:10,background: photon.polarization === 'vertical' ? 'var(--polar-vertical)'
+                          : photon.polarization === 'horizontal' ? 'var(--polar-horizontal)'
+                          : photon.polarization === 'diagonal' ? 'var(--polar-diagonal)'
+                          : 'var(--polar-antidiagonal)', borderRadius:6}} />
+                        <span className="whitespace-nowrap text-sm">
+                          {photon.polarization === 'vertical' ? '|' : photon.polarization === 'horizontal' ? '—' : photon.polarization === 'diagonal' ? '/' : '\\'}
+                        </span>
+                      </span>
+                    </td>
                   <td className="p-2 font-mono">{photon.bobBit}</td>
                   <td className="p-2">
                     {photon.basesMatch ? (

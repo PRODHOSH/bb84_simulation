@@ -11,6 +11,7 @@ import { useSimulation } from "@/contexts/SimulationContext";
 import KeyResults from "@/components/simulation/KeyResults";
 import AnalyticsDashboard from "@/components/simulation/AnalyticsDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Footer from "@/components/ui/Footer";
 
 
 const Simulation = () => {
@@ -222,6 +223,7 @@ const Simulation = () => {
             </Card>
           )}
         </div>
+        <Footer />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Lock, Atom, Sparkles, Users } from "lucide-react";
+import Footer from "@/components/ui/Footer";
 
 
 const Home = () => {
@@ -97,6 +98,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

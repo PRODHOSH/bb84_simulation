@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import Footer from "@/components/ui/Footer";
 
 
 
@@ -119,6 +120,7 @@ const Theory = () => {
             </Link>
           </div>
         </div>
+        <Footer />
       </div>
     </div>
   );

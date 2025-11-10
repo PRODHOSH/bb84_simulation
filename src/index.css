@@ -95,31 +95,94 @@ All colors MUST be HSL.
     position: fixed; /* cover the full viewport */
     inset: 0;
     pointer-events: none;
-    /* Dense, small colorful particles similar to screenshot 2 */
+    /* Dense, colorful particles with larger sizes */
     background-image:
-      radial-gradient(circle at 2% 5%, rgba(255,255,255,0.98) 0.6px, transparent 0.8px),
-      radial-gradient(circle at 22% 18%, rgba(0,240,200,0.95) 0.6px, transparent 0.8px),
-      radial-gradient(circle at 40% 40%, rgba(168,85,247,0.92) 0.6px, transparent 0.8px),
-      radial-gradient(circle at 60% 25%, rgba(255,210,80,0.9) 0.6px, transparent 0.8px),
-      radial-gradient(circle at 80% 70%, rgba(255,128,200,0.9) 0.6px, transparent 0.8px);
-    background-size: 220px 220px, 180px 180px, 140px 140px, 320px 320px, 160px 160px;
-    background-position: 0% 0%, 10% 20%, 30% 10%, 60% 80%, 5% 75%;
-    opacity: 0.26;
+      /* Layer 1: White stars - larger */
+      radial-gradient(circle at 2% 5%, rgba(255,255,255,0.95) 1.5px, transparent 2px),
+      radial-gradient(circle at 15% 15%, rgba(255,255,255,0.9) 1.2px, transparent 1.5px),
+      radial-gradient(circle at 85% 10%, rgba(255,255,255,0.85) 1px, transparent 1.3px),
+      radial-gradient(circle at 92% 88%, rgba(255,255,255,0.9) 1.4px, transparent 1.8px),
+      /* Layer 2: Cyan stars - larger */
+      radial-gradient(circle at 22% 18%, rgba(0,240,200,0.92) 1.5px, transparent 2px),
+      radial-gradient(circle at 65% 12%, rgba(0,240,200,0.85) 1.1px, transparent 1.4px),
+      radial-gradient(circle at 8% 78%, rgba(0,240,200,0.88) 1.2px, transparent 1.6px),
+      /* Layer 3: Purple stars - larger */
+      radial-gradient(circle at 40% 40%, rgba(168,85,247,0.9) 1.5px, transparent 2px),
+      radial-gradient(circle at 70% 65%, rgba(168,85,247,0.85) 1.1px, transparent 1.4px),
+      radial-gradient(circle at 25% 85%, rgba(168,85,247,0.88) 1.2px, transparent 1.6px),
+      /* Layer 4: Yellow/Gold stars - larger */
+      radial-gradient(circle at 60% 25%, rgba(255,210,80,0.88) 1.5px, transparent 2px),
+      radial-gradient(circle at 45% 70%, rgba(255,210,80,0.82) 1.1px, transparent 1.4px),
+      radial-gradient(circle at 88% 45%, rgba(255,210,80,0.85) 1.2px, transparent 1.6px),
+      /* Layer 5: Pink stars - larger */
+      radial-gradient(circle at 80% 70%, rgba(255,128,200,0.88) 1.5px, transparent 2px),
+      radial-gradient(circle at 35% 55%, rgba(255,128,200,0.82) 1.1px, transparent 1.4px),
+      radial-gradient(circle at 12% 32%, rgba(255,128,200,0.85) 1.2px, transparent 1.6px),
+      /* Layer 6: More scattered medium stars */
+      radial-gradient(circle at 50% 8%, rgba(255,255,255,0.7) 0.8px, transparent 1.1px),
+      radial-gradient(circle at 75% 92%, rgba(0,240,200,0.7) 0.8px, transparent 1.1px),
+      radial-gradient(circle at 18% 48%, rgba(168,85,247,0.7) 0.8px, transparent 1.1px),
+      radial-gradient(circle at 95% 35%, rgba(255,210,80,0.7) 0.8px, transparent 1.1px);
+    background-size: 
+      220px 220px, 280px 280px, 350px 350px, 400px 400px,
+      180px 180px, 240px 240px, 320px 320px,
+      140px 140px, 200px 200px, 260px 260px,
+      320px 320px, 380px 380px, 420px 420px,
+      160px 160px, 220px 220px, 280px 280px,
+      180px 180px, 240px 240px, 300px 300px, 360px 360px;
+    background-position: 
+      0% 0%, 15% 15%, 85% 10%, 92% 88%,
+      10% 20%, 65% 12%, 8% 78%,
+      30% 10%, 70% 65%, 25% 85%,
+      60% 80%, 45% 70%, 88% 45%,
+      5% 75%, 35% 55%, 12% 32%,
+      50% 8%, 75% 92%, 18% 48%, 95% 35%;
+    opacity: 0.4;
     mix-blend-mode: screen;
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.03));
-    animation: twinkle 6.5s linear infinite, drift 40s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));
+    animation: twinkle 8s ease-in-out infinite, drift 60s linear infinite;
     z-index: 0;
   }
 
   @keyframes twinkle {
-    0%, 100% { opacity: 0.09; transform: translateZ(0) scale(1); }
-    50% { opacity: 0.18; transform: translateZ(0) scale(1.02); }
+    0%, 100% { 
+      opacity: 0.3; 
+      transform: translateZ(0) scale(1); 
+    }
+    50% { 
+      opacity: 0.5; 
+      transform: translateZ(0) scale(1.05); 
+    }
   }
 
   @keyframes drift {
-    0% { background-position: 0% 0%, 10% 20%, 30% 10%, 60% 80%, 5% 75%; }
-    50% { background-position: 30% 10%, 40% 35%, 10% 50%, 30% 60%, 45% 20%; }
-    100% { background-position: 0% 0%, 10% 20%, 30% 10%, 60% 80%, 5% 75%; }
+    0% { 
+      background-position: 
+        0% 0%, 15% 15%, 85% 10%, 92% 88%,
+        10% 20%, 65% 12%, 8% 78%,
+        30% 10%, 70% 65%, 25% 85%,
+        60% 80%, 45% 70%, 88% 45%,
+        5% 75%, 35% 55%, 12% 32%,
+        50% 8%, 75% 92%, 18% 48%, 95% 35%;
+    }
+    50% { 
+      background-position: 
+        20% 15%, 35% 30%, 70% 25%, 77% 73%,
+        30% 35%, 45% 27%, 28% 63%,
+        50% 25%, 50% 50%, 45% 70%,
+        40% 65%, 65% 55%, 68% 60%,
+        25% 60%, 55% 40%, 32% 47%,
+        70% 23%, 55% 77%, 38% 33%, 75% 50%;
+    }
+    100% { 
+      background-position: 
+        0% 0%, 15% 15%, 85% 10%, 92% 88%,
+        10% 20%, 65% 12%, 8% 78%,
+        30% 10%, 70% 65%, 25% 85%,
+        60% 80%, 45% 70%, 88% 45%,
+        5% 75%, 35% 55%, 12% 32%,
+        50% 8%, 75% 92%, 18% 48%, 95% 35%;
+    }
   }
 
   .glow-primary {

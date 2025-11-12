@@ -28,11 +28,11 @@ export interface LeaderboardEntry {
 
 // Auth helper functions
 export const signInWithGoogle = async () => {
-  // Use current origin to work on any device/domain
+  // Always redirect to Vercel production URL
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}${window.location.pathname}#/quiz`,
+      redirectTo: 'https://bb84-simulation.vercel.app/#/quiz',
     },
   });
   return { data, error };
@@ -47,7 +47,7 @@ export const signUpWithEmail = async (email: string, password: string, username:
         username,
         display_name: username,
       },
-      emailRedirectTo: `${window.location.origin}${window.location.pathname}#/quiz`,
+      emailRedirectTo: 'https://bb84-simulation.vercel.app/#/quiz',
     },
   });
   return { data, error };

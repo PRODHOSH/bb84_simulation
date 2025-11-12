@@ -7,6 +7,8 @@ import { SimulationProvider } from "./contexts/SimulationContext";
 import Home from "./pages/Home";
 import Theory from "./pages/Theory";
 import Simulation from "./pages/Simulation";
+import Documentation from "./pages/Documentation";
+import Quiz from "./pages/Quiz";
 import NotFound from "./pages/NotFound";
 import Starfield from "@/components/ui/Starfield";
 
@@ -27,6 +29,8 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/theory" element={<Theory />} />
           <Route path="/simulation" element={<Simulation />} />
+          <Route path="/documentation" element={<Documentation />} />
+          <Route path="/quiz" element={<Quiz />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

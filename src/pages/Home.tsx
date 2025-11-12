@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Lock, Atom, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Lock, Atom, Sparkles, Users, FileText, Trophy } from "lucide-react";
 import Footer from "@/components/ui/Footer";
 
 
@@ -49,6 +49,19 @@ const Home = () => {
                 Learn the Theory
               </Button>
             </Link>
+            <Link to="/quiz">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-purple-500/30 hover:bg-purple-500/10 hover:border-purple-500/50 hover:text-white group"
+              >
+                <Trophy className="mr-2 w-5 h-5" />
+                Take Quiz
+              </Button>
+            </Link>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
             <a href="team.html">
               <Button 
                 size="lg" 
@@ -59,6 +72,16 @@ const Home = () => {
                 Meet the Team
               </Button>
             </a>
+            <Link to="/documentation">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-cyan-500/30 hover:bg-cyan-500/10 hover:border-cyan-500/50 hover:text-white group"
+              >
+                <FileText className="mr-2 w-5 h-5" />
+                Documentation
+              </Button>
+            </Link>
           </div>
         </div>
 

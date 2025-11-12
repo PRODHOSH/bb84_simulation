@@ -1,23 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
   Trophy,
   Clock,
   CheckCircle,
   XCircle,
-  Star,
-  Award,
-  Target,
-  Zap,
+  LogOut,
   RefreshCw
 } from 'lucide-react';
 import Footer from '@/components/ui/Footer';
-import { supabase, canSubmitScore, updateLastSubmission, type LeaderboardEntry } from '@/lib/supabase';
+import { supabase, signOut, type LeaderboardEntry } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Question {
   id: number;
@@ -190,17 +187,18 @@ const questions: Question[] = [
   }
 ];
 
-type GameState = 'username' | 'quiz' | 'results' | 'leaderboard';
+type GameState = 'quiz' | 'results' | 'leaderboard';
 
 const Quiz = () => {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const [gameState, setGameState] = useState<GameState>('username');
-  const [username, setUsername] = useState('');
+  const [gameState, setGameState] = useState<GameState>('quiz');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answers, setAnswers] = useState<(number | null)[]>(new Array(questions.length).fill(null));
   const [showExplanation, setShowExplanation] = useState(false);
-  const [startTime, setStartTime] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number>(Date.now());
   const [endTime, setEndTime] = useState<number>(0);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [timeFilter, setTimeFilter] = useState<'today' | 'week' | 'all'>('all');
@@ -209,9 +207,18 @@ const Quiz = () => {
   const score = answers.filter((ans, idx) => ans === questions[idx].correctAnswer).length;
   const timeTaken = Math.floor((endTime - startTime) / 1000);
 
+  // Redirect if not authenticated
   useEffect(() => {
-    fetchLeaderboard();
-  }, [timeFilter]);
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (user) {
+      fetchLeaderboard();
+    }
+  }, [timeFilter, user]);
 
   const fetchLeaderboard = async () => {
     setLoading(true);
@@ -239,27 +246,9 @@ const Quiz = () => {
       setLeaderboard(data || []);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load leaderboard",
-        variant: "destructive"
-      });
     } finally {
       setLoading(false);
     }
-  };
-
-  const startQuiz = () => {
-    if (username.trim().length < 2) {
-      toast({
-        title: "Invalid Username",
-        description: "Username must be at least 2 characters",
-        variant: "destructive"
-      });
-      return;
-    }
-    setStartTime(Date.now());
-    setGameState('quiz');
   };
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -298,26 +287,22 @@ const Quiz = () => {
   };
 
   const submitResults = async (finalAnswers: (number | null)[]) => {
-    setEndTime(Date.now());
+    const endT = Date.now();
+    setEndTime(endT);
     setGameState('results');
 
     const finalScore = finalAnswers.filter((ans, idx) => ans === questions[idx].correctAnswer).length;
-    const finalTime = Math.floor((Date.now() - startTime) / 1000);
+    const finalTime = Math.floor((endT - startTime) / 1000);
 
-    // Check rate limiting
-    if (!canSubmitScore()) {
-      toast({
-        title: "Please wait",
-        description: "You can submit again in 30 seconds",
-        variant: "destructive"
-      });
-      return;
-    }
+    if (!user) return;
 
     try {
+      const username = user.user_metadata?.username || user.email?.split('@')[0] || 'Anonymous';
+      
       const { error } = await supabase.from('leaderboard').insert([
         {
-          username: username.trim(),
+          user_id: user.id,
+          username: username,
           score: finalScore,
           total_questions: questions.length,
           time_taken: finalTime
@@ -326,10 +311,9 @@ const Quiz = () => {
 
       if (error) throw error;
 
-      updateLastSubmission();
       toast({
         title: "Score Submitted! 🎉",
-        description: `Great job, ${username}!`,
+        description: `Great job!`,
       });
       
       fetchLeaderboard();
@@ -337,21 +321,25 @@ const Quiz = () => {
       console.error('Error submitting score:', error);
       toast({
         title: "Submission Error",
-        description: "Score saved locally but not submitted to leaderboard",
+        description: "Could not submit score to leaderboard",
         variant: "destructive"
       });
     }
   };
 
   const resetQuiz = () => {
-    setGameState('username');
-    setUsername('');
+    setGameState('quiz');
     setCurrentQuestion(0);
     setSelectedAnswer(null);
     setAnswers(new Array(questions.length).fill(null));
     setShowExplanation(false);
-    setStartTime(0);
+    setStartTime(Date.now());
     setEndTime(0);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
   };
 
   const formatTime = (seconds: number) => {
@@ -367,87 +355,20 @@ const Quiz = () => {
     return `${index + 1}.`;
   };
 
-  // Username Screen
-  if (gameState === 'username') {
+  if (authLoading) {
     return (
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="starfield" />
-        
-        <div className="relative z-10 container mx-auto px-4 py-8 max-w-2xl">
-          <Link to="/" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition-colors">
-            <ArrowLeft size={20} />
-            Back to Home
-          </Link>
-
-          <div className="text-center mb-12">
-            <div className="inline-block mb-4 px-4 py-1.5 bg-purple-500/20 border border-purple-500/30 rounded-full">
-              <span className="text-purple-400 text-sm font-medium">🎯 Test Your Knowledge</span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 gradient-text">
-              Quantum Quiz Challenge
-            </h1>
-            <p className="text-xl text-gray-300">
-              Think you understand BB84? Prove it!
-            </p>
-          </div>
-
-          <Card className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border-purple-500/30 p-8">
-            <div className="text-center mb-8">
-              <Trophy size={64} className="mx-auto text-yellow-400 mb-4" />
-              <h2 className="text-2xl font-bold mb-2">Enter Your Name</h2>
-              <p className="text-gray-400">Compete on the global leaderboard!</p>
-            </div>
-
-            <Input
-              type="text"
-              placeholder="Enter your username..."
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && startQuiz()}
-              className="mb-6 bg-black/30 border-purple-500/50 text-white text-lg p-6 text-center"
-              maxLength={20}
-            />
-
-            <Button
-              onClick={startQuiz}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-lg py-6"
-            >
-              <Star className="mr-2" />
-              Start Quiz
-            </Button>
-
-            <div className="mt-8 grid grid-cols-3 gap-4 text-center">
-              <div className="bg-black/30 p-4 rounded-lg">
-                <Target size={24} className="mx-auto text-blue-400 mb-2" />
-                <p className="text-2xl font-bold">{questions.length}</p>
-                <p className="text-sm text-gray-400">Questions</p>
-              </div>
-              <div className="bg-black/30 p-4 rounded-lg">
-                <Zap size={24} className="mx-auto text-yellow-400 mb-2" />
-                <p className="text-2xl font-bold">~5min</p>
-                <p className="text-sm text-gray-400">Duration</p>
-              </div>
-              <div className="bg-black/30 p-4 rounded-lg">
-                <Award size={24} className="mx-auto text-purple-400 mb-2" />
-                <p className="text-2xl font-bold">Global</p>
-                <p className="text-sm text-gray-400">Ranking</p>
-              </div>
-            </div>
-
-            <Button
-              onClick={() => setGameState('leaderboard')}
-              variant="outline"
-              className="w-full mt-6 border-purple-500/50 hover:bg-purple-500/10"
-            >
-              <Trophy className="mr-2" size={18} />
-              View Leaderboard
-            </Button>
-          </Card>
+        <div className="relative z-10">
+          <RefreshCw className="animate-spin mx-auto text-blue-400 mb-4" size={48} />
+          <p className="text-gray-400">Loading...</p>
         </div>
-
-        <Footer />
       </div>
     );
+  }
+
+  if (!user) {
+    return null; // Will redirect
   }
 
   // Quiz Screen
@@ -460,48 +381,63 @@ const Quiz = () => {
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="starfield" />
         
-        <div className="relative z-10 container mx-auto px-4 py-8 max-w-4xl">
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-gray-400">
-                Question {currentQuestion + 1} of {questions.length}
-              </span>
-              <span className="text-sm text-gray-400 flex items-center gap-2">
-                <Clock size={16} />
+        <div className="relative z-10 container mx-auto px-4 py-6 max-w-3xl">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <Link to="/" className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
+              <ArrowLeft size={20} />
+              Home
+            </Link>
+            <Button
+              onClick={handleSignOut}
+              variant="outline"
+              size="sm"
+              className="border-gray-700 hover:bg-gray-800"
+            >
+              <LogOut size={16} className="mr-2" />
+              Sign Out
+            </Button>
+          </div>
+
+          {/* Progress */}
+          <div className="mb-6">
+            <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <span>Question {currentQuestion + 1} of {questions.length}</span>
+              <span className="flex items-center gap-1">
+                <Clock size={14} />
                 {formatTime(Math.floor((Date.now() - startTime) / 1000))}
               </span>
             </div>
             <div className="w-full bg-gray-800 rounded-full h-2">
               <div
-                className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all"
                 style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
               />
             </div>
           </div>
 
-          {/* Question Card */}
-          <Card className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border-purple-500/30 p-8 mb-6">
-            <h2 className="text-2xl font-bold mb-8">{question.question}</h2>
+          {/* Question */}
+          <Card className="bg-gray-900/50 border-gray-700 p-6 mb-4">
+            <h2 className="text-xl font-bold mb-6">{question.question}</h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {question.options.map((option, index) => {
                 const isSelected = selectedAnswer === index;
                 const isCorrectAnswer = index === question.correctAnswer;
                 
-                let buttonClass = "w-full text-left p-4 rounded-lg border-2 transition-all ";
+                let className = "w-full text-left p-4 rounded-lg border-2 transition-all ";
                 
                 if (!showExplanation) {
-                  buttonClass += isSelected
-                    ? "border-purple-500 bg-purple-500/20"
-                    : "border-gray-700 bg-gray-800/50 hover:border-purple-500/50";
+                  className += isSelected
+                    ? "border-blue-500 bg-blue-500/10"
+                    : "border-gray-700 bg-gray-800/50 hover:border-gray-600";
                 } else {
                   if (isCorrectAnswer) {
-                    buttonClass += "border-green-500 bg-green-500/20";
+                    className += "border-green-500 bg-green-500/10";
                   } else if (isSelected && !isCorrect) {
-                    buttonClass += "border-red-500 bg-red-500/20";
+                    className += "border-red-500 bg-red-500/10";
                   } else {
-                    buttonClass += "border-gray-700 bg-gray-800/50";
+                    className += "border-gray-700 bg-gray-800/50";
                   }
                 }
 
@@ -509,19 +445,19 @@ const Quiz = () => {
                   <button
                     key={index}
                     onClick={() => !showExplanation && handleAnswerSelect(index)}
-                    className={buttonClass}
+                    className={className}
                     disabled={showExplanation}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-black/30 flex items-center justify-center font-bold">
+                      <div className="w-6 h-6 rounded-full bg-black/30 flex items-center justify-center text-sm font-bold flex-shrink-0">
                         {String.fromCharCode(65 + index)}
                       </div>
-                      <span className="flex-1">{option}</span>
+                      <span className="flex-1 text-left">{option}</span>
                       {showExplanation && isCorrectAnswer && (
-                        <CheckCircle className="text-green-500" size={24} />
+                        <CheckCircle className="text-green-500 flex-shrink-0" size={20} />
                       )}
                       {showExplanation && isSelected && !isCorrect && (
-                        <XCircle className="text-red-500" size={24} />
+                        <XCircle className="text-red-500 flex-shrink-0" size={20} />
                       )}
                     </div>
                   </button>
@@ -530,32 +466,28 @@ const Quiz = () => {
             </div>
 
             {showExplanation && (
-              <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <p className="text-sm text-blue-300">
+              <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                <p className="text-sm text-blue-200">
                   <strong>Explanation:</strong> {question.explanation}
                 </p>
               </div>
             )}
           </Card>
 
-          {/* Navigation Buttons */}
-          <div className="flex gap-4">
+          {/* Navigation */}
+          <div className="flex gap-3">
             <Button
               onClick={handlePreviousQuestion}
               disabled={currentQuestion === 0}
               variant="outline"
-              className="flex-1 border-purple-500/50 hover:bg-purple-500/10"
+              className="border-gray-700 hover:bg-gray-800"
             >
               Previous
             </Button>
 
             {!showExplanation ? (
               <Button
-                onClick={() => {
-                  if (selectedAnswer !== null) {
-                    setShowExplanation(true);
-                  }
-                }}
+                onClick={() => selectedAnswer !== null && setShowExplanation(true)}
                 disabled={selectedAnswer === null}
                 className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500"
               >
@@ -564,34 +496,11 @@ const Quiz = () => {
             ) : (
               <Button
                 onClick={handleNextQuestion}
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500"
               >
-                {currentQuestion === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                {currentQuestion === questions.length - 1 ? 'Finish' : 'Next'}
               </Button>
             )}
-          </div>
-
-          {/* Question Navigator */}
-          <div className="mt-6 flex flex-wrap gap-2 justify-center">
-            {questions.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  setCurrentQuestion(idx);
-                  setSelectedAnswer(answers[idx]);
-                  setShowExplanation(false);
-                }}
-                className={`w-10 h-10 rounded-full font-bold transition-all ${
-                  idx === currentQuestion
-                    ? 'bg-purple-600 text-white ring-2 ring-purple-400'
-                    : answers[idx] !== null
-                    ? 'bg-gray-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                }`}
-              >
-                {idx + 1}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -603,60 +512,39 @@ const Quiz = () => {
   // Results Screen
   if (gameState === 'results') {
     const percentage = Math.round((score / questions.length) * 100);
-    let grade = '';
-    let gradeColor = '';
-    
-    if (percentage >= 90) {
-      grade = 'Quantum Master! 🏆';
-      gradeColor = 'text-yellow-400';
-    } else if (percentage >= 75) {
-      grade = 'Excellent! 🌟';
-      gradeColor = 'text-green-400';
-    } else if (percentage >= 60) {
-      grade = 'Good Job! 👍';
-      gradeColor = 'text-blue-400';
-    } else if (percentage >= 40) {
-      grade = 'Keep Learning! 📚';
-      gradeColor = 'text-orange-400';
-    } else {
-      grade = 'Review Theory! 🔄';
-      gradeColor = 'text-red-400';
-    }
 
     return (
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="starfield" />
         
-        <div className="relative z-10 container mx-auto px-4 py-8 max-w-4xl">
-          <div className="text-center mb-12">
-            <Trophy size={80} className="mx-auto text-yellow-400 mb-4 animate-pulse" />
-            <h1 className="text-5xl font-bold mb-4 gradient-text">Quiz Complete!</h1>
-            <p className="text-xl text-gray-300">Great effort, {username}!</p>
+        <div className="relative z-10 container mx-auto px-4 py-8 max-w-2xl">
+          <div className="text-center mb-8">
+            <Trophy size={64} className="mx-auto text-yellow-400 mb-4" />
+            <h1 className="text-4xl font-bold mb-2 gradient-text">Quiz Complete!</h1>
           </div>
 
-          <Card className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border-purple-500/30 p-8 mb-6">
-            <div className="text-center mb-8">
-              <div className={`text-6xl font-bold mb-2 ${gradeColor}`}>
+          <Card className="bg-gray-900/50 border-gray-700 p-8 mb-6">
+            <div className="text-center mb-6">
+              <div className="text-6xl font-bold text-blue-400 mb-2">
                 {score}/{questions.length}
               </div>
-              <div className="text-3xl font-bold mb-4">{percentage}%</div>
-              <div className={`text-2xl ${gradeColor}`}>{grade}</div>
+              <div className="text-2xl text-gray-400">{percentage}%</div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="bg-black/30 p-4 rounded-lg text-center">
-                <Clock size={24} className="mx-auto text-blue-400 mb-2" />
-                <p className="text-2xl font-bold">{formatTime(timeTaken)}</p>
-                <p className="text-sm text-gray-400">Time Taken</p>
+                <Clock size={20} className="mx-auto text-blue-400 mb-2" />
+                <p className="text-xl font-bold">{formatTime(timeTaken)}</p>
+                <p className="text-sm text-gray-400">Time</p>
               </div>
               <div className="bg-black/30 p-4 rounded-lg text-center">
-                <Target size={24} className="mx-auto text-green-400 mb-2" />
-                <p className="text-2xl font-bold">{Math.round((score / timeTaken) * 60)}%</p>
-                <p className="text-sm text-gray-400">Accuracy/Min</p>
+                <Trophy size={20} className="mx-auto text-yellow-400 mb-2" />
+                <p className="text-xl font-bold">{percentage >= 80 ? 'Excellent!' : percentage >= 60 ? 'Good!' : 'Keep Learning!'}</p>
+                <p className="text-sm text-gray-400">Grade</p>
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <Button
                 onClick={() => setGameState('leaderboard')}
                 className="w-full bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500"
@@ -667,56 +555,11 @@ const Quiz = () => {
               <Button
                 onClick={resetQuiz}
                 variant="outline"
-                className="w-full border-purple-500/50 hover:bg-purple-500/10"
+                className="w-full border-gray-700 hover:bg-gray-800"
               >
                 <RefreshCw className="mr-2" />
                 Try Again
               </Button>
-              <Link to="/theory" className="block">
-                <Button
-                  variant="outline"
-                  className="w-full border-blue-500/50 hover:bg-blue-500/10"
-                >
-                  <ArrowLeft className="mr-2" />
-                  Review Theory
-                </Button>
-              </Link>
-            </div>
-          </Card>
-
-          {/* Answer Review */}
-          <Card className="bg-gradient-to-br from-gray-900/50 to-gray-800/50 border-gray-700/50 p-8">
-            <h2 className="text-2xl font-bold mb-6">Answer Review</h2>
-            <div className="space-y-4">
-              {questions.map((q, idx) => {
-                const userAnswer = answers[idx];
-                const isCorrect = userAnswer === q.correctAnswer;
-                
-                return (
-                  <div key={q.id} className="p-4 bg-black/30 rounded-lg">
-                    <div className="flex items-start gap-3">
-                      {isCorrect ? (
-                        <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={24} />
-                      ) : (
-                        <XCircle className="text-red-500 flex-shrink-0 mt-1" size={24} />
-                      )}
-                      <div className="flex-1">
-                        <p className="font-bold mb-2">{idx + 1}. {q.question}</p>
-                        <p className="text-sm text-gray-400">
-                          Your answer: <span className={isCorrect ? 'text-green-400' : 'text-red-400'}>
-                            {userAnswer !== null ? q.options[userAnswer] : 'Not answered'}
-                          </span>
-                        </p>
-                        {!isCorrect && (
-                          <p className="text-sm text-green-400 mt-1">
-                            Correct answer: {q.options[q.correctAnswer]}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </Card>
         </div>
@@ -731,80 +574,79 @@ const Quiz = () => {
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <div className="starfield" />
       
-      <div className="relative z-10 container mx-auto px-4 py-8 max-w-4xl">
-        <Link to="/" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition-colors">
+      <div className="relative z-10 container mx-auto px-4 py-8 max-w-3xl">
+        <Link to="/" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-6 transition-colors">
           <ArrowLeft size={20} />
-          Back to Home
+          Home
         </Link>
 
-        <div className="text-center mb-12">
-          <Trophy size={80} className="mx-auto text-yellow-400 mb-4" />
-          <h1 className="text-5xl font-bold mb-4 gradient-text">Global Leaderboard</h1>
-          <p className="text-xl text-gray-300">Top Quantum Quiz Champions</p>
+        <div className="text-center mb-8">
+          <Trophy size={64} className="mx-auto text-yellow-400 mb-4" />
+          <h1 className="text-4xl font-bold mb-2 gradient-text">Leaderboard</h1>
+          <p className="text-gray-300">Top Quantum Champions</p>
         </div>
 
-        {/* Time Filter */}
+        {/* Filters */}
         <div className="flex gap-2 mb-6 justify-center">
           <Button
             onClick={() => setTimeFilter('today')}
             variant={timeFilter === 'today' ? 'default' : 'outline'}
-            className={timeFilter === 'today' ? 'bg-purple-600' : 'border-purple-500/50'}
+            size="sm"
+            className={timeFilter === 'today' ? 'bg-blue-600' : 'border-gray-700'}
           >
             Today
           </Button>
           <Button
             onClick={() => setTimeFilter('week')}
             variant={timeFilter === 'week' ? 'default' : 'outline'}
-            className={timeFilter === 'week' ? 'bg-purple-600' : 'border-purple-500/50'}
+            size="sm"
+            className={timeFilter === 'week' ? 'bg-blue-600' : 'border-gray-700'}
           >
-            This Week
+            Week
           </Button>
           <Button
             onClick={() => setTimeFilter('all')}
             variant={timeFilter === 'all' ? 'default' : 'outline'}
-            className={timeFilter === 'all' ? 'bg-purple-600' : 'border-purple-500/50'}
+            size="sm"
+            className={timeFilter === 'all' ? 'bg-blue-600' : 'border-gray-700'}
           >
             All Time
           </Button>
         </div>
 
-        <Card className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border-purple-500/30 p-8 mb-6">
+        <Card className="bg-gray-900/50 border-gray-700 p-6 mb-6">
           {loading ? (
-            <div className="text-center py-12">
-              <RefreshCw className="animate-spin mx-auto text-purple-400 mb-4" size={48} />
-              <p className="text-gray-400">Loading leaderboard...</p>
+            <div className="text-center py-8">
+              <RefreshCw className="animate-spin mx-auto text-blue-400 mb-4" size={40} />
             </div>
           ) : leaderboard.length === 0 ? (
-            <div className="text-center py-12">
-              <Trophy className="mx-auto text-gray-600 mb-4" size={48} />
-              <p className="text-gray-400">No scores yet. Be the first!</p>
+            <div className="text-center py-8 text-gray-400">
+              No scores yet. Be the first!
             </div>
           ) : (
             <div className="space-y-3">
               {leaderboard.map((entry, index) => (
                 <div
                   key={entry.id}
-                  className={`p-4 rounded-lg flex items-center gap-4 transition-all ${
-                    index < 3
-                      ? 'bg-gradient-to-r from-yellow-900/30 to-orange-900/30 border border-yellow-500/30'
-                      : 'bg-black/30'
+                  className={`p-4 rounded-lg flex items-center gap-4 ${
+                    index < 3 ? 'bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-500/20' : 'bg-black/20'
                   }`}
                 >
-                  <div className="text-2xl font-bold w-12 text-center">
+                  <div className="text-xl font-bold w-10 text-center">
                     {getRankEmoji(index)}
                   </div>
                   <div className="flex-1">
-                    <p className="font-bold text-lg">{entry.username}</p>
+                    <p className="font-bold">{entry.username}</p>
                     <p className="text-sm text-gray-400">
                       {new Date(entry.created_at!).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-purple-400">
+                    <p className="text-xl font-bold text-blue-400">
                       {entry.score}/{entry.total_questions}
                     </p>
                     <p className="text-sm text-gray-400 flex items-center gap-1 justify-end">
-                      <Clock size={14} />
+                      <Clock size={12} />
                       {formatTime(entry.time_taken)}
                     </p>
                   </div>
@@ -814,18 +656,17 @@ const Quiz = () => {
           )}
         </Card>
 
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           <Button
             onClick={resetQuiz}
-            className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500"
+            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500"
           >
-            <Star className="mr-2" />
-            Take Quiz
+            Take Quiz Again
           </Button>
           <Button
             onClick={fetchLeaderboard}
             variant="outline"
-            className="border-purple-500/50 hover:bg-purple-500/10"
+            className="border-gray-700 hover:bg-gray-800"
           >
             <RefreshCw size={18} />
           </Button>

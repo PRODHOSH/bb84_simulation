@@ -4,7 +4,7 @@ import path from "path";
 
 
 export default defineConfig(({ mode }) => ({
-  base: '/bb84_simulation/',
+  base: mode === 'production' ? '/' : '/bb84_simulation/',
   server: {
     host: "::",
     port: 8080,

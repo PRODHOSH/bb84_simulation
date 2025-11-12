@@ -37,13 +37,21 @@
 
 1. Go to: https://console.cloud.google.com/apis/credentials
 2. Click on your **OAuth 2.0 Client ID**
-3. Under **Authorized redirect URIs**, add:
+3. Under **Authorized redirect URIs**, add **ALL of these**:
    ```
    https://banyhroaktppyqtspznt.supabase.co/auth/v1/callback
+   http://localhost:8080
+   http://localhost:3000
    ```
-4. Click **Save**
+4. Under **Authorized JavaScript origins**, add:
+   ```
+   http://localhost:8080
+   https://bb84-simulation.vercel.app
+   ```
+5. Click **Save**
+6. **Wait 5-10 minutes** for Google to propagate the changes
 
-✅ This allows Google OAuth to redirect back to your app.
+✅ This allows Google OAuth to redirect back to your app on the correct port.
 
 ---
 

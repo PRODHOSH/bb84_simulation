@@ -28,10 +28,16 @@ export interface LeaderboardEntry {
 
 // Auth helper functions
 export const signInWithGoogle = async () => {
+  // Determine the correct redirect URL based on environment
+  const isDev = window.location.hostname === 'localhost';
+  const redirectTo = isDev 
+    ? 'http://localhost:8080/#/quiz'
+    : 'https://bb84-simulation.vercel.app/#/quiz';
+  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/#/quiz`,
+      redirectTo,
     },
   });
   return { data, error };

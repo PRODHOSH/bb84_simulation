@@ -39,55 +39,83 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (mode === 'signup') {
-      if (!formData.username.trim()) {
-        toast({
-          title: "Username Required",
-          description: "Please enter a username",
-          variant: "destructive"
-        });
-        setLoading(false);
-        return;
-      }
+    try {
+      if (mode === 'signup') {
+        if (!formData.username.trim()) {
+          toast({
+            title: "Username Required",
+            description: "Please enter a username",
+            variant: "destructive"
+          });
+          setLoading(false);
+          return;
+        }
 
-      const { error } = await signUpWithEmail(
-        formData.email,
-        formData.password,
-        formData.username
-      );
+        const { data, error } = await signUpWithEmail(
+          formData.email,
+          formData.password,
+          formData.username
+        );
 
-      if (error) {
-        toast({
-          title: "Sign Up Failed",
-          description: error.message,
-          variant: "destructive"
-        });
+        if (error) {
+          toast({
+            title: "Sign Up Failed",
+            description: error.message,
+            variant: "destructive"
+          });
+        } else if (data.user) {
+          // Check if email confirmation is required
+          if (data.user.identities && data.user.identities.length === 0) {
+            toast({
+              title: "Email Already Registered",
+              description: "Please sign in with your existing account",
+              variant: "destructive"
+            });
+          } else if (data.session) {
+            // Auto-confirmed, user is logged in
+            toast({
+              title: "Account Created! 🎉",
+              description: "Redirecting to quiz...",
+            });
+            setTimeout(() => navigate('/quiz'), 500);
+          } else {
+            // Email confirmation required
+            toast({
+              title: "Check Your Email! 📧",
+              description: "We sent you a confirmation link. If you don't see it, check spam folder.",
+            });
+            setMode('signin');
+          }
+        }
       } else {
-        toast({
-          title: "Check Your Email! 📧",
-          description: "We sent you a confirmation link",
-        });
-        setMode('signin');
-      }
-    } else {
-      const { error } = await signInWithEmail(formData.email, formData.password);
+        const { data, error } = await signInWithEmail(formData.email, formData.password);
 
-      if (error) {
-        toast({
-          title: "Sign In Failed",
-          description: error.message,
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "Welcome Back! 🎉",
-          description: "Redirecting to quiz...",
-        });
-        setTimeout(() => navigate('/quiz'), 500);
+        if (error) {
+          toast({
+            title: "Sign In Failed",
+            description: error.message === "Invalid login credentials" 
+              ? "Wrong email or password. Please try again."
+              : error.message,
+            variant: "destructive"
+          });
+        } else if (data.user) {
+          toast({
+            title: "Welcome Back! 🎉",
+            description: "Redirecting to quiz...",
+          });
+          setTimeout(() => navigate('/quiz'), 500);
+        }
       }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+      console.error('Auth error:', err);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

@@ -7,7 +7,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+});
 
 // Types for our leaderboard
 export interface LeaderboardEntry {
@@ -22,15 +28,10 @@ export interface LeaderboardEntry {
 
 // Auth helper functions
 export const signInWithGoogle = async () => {
-  // Use Vercel URL in production, localhost in development
-  const redirectUrl = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8080/#/quiz'
-    : 'https://bb84-simulation.vercel.app/#/quiz';
-  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: redirectUrl,
+      redirectTo: `${window.location.origin}/#/quiz`,
     },
   });
   return { data, error };
@@ -43,7 +44,9 @@ export const signUpWithEmail = async (email: string, password: string, username:
     options: {
       data: {
         username,
+        display_name: username,
       },
+      emailRedirectTo: `${window.location.origin}/#/quiz`,
     },
   });
   return { data, error };

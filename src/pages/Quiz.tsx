@@ -44,6 +44,7 @@ const questions: Question[] = [
     correctAnswer: 2,
     explanation: "BB84 uses 4 polarization states: Vertical (|), Horizontal (—), Diagonal (/), and Anti-diagonal (\\)."
   },
+  
   {
     id: 3,
     question: "What happens when Alice and Bob use different bases to measure the same photon?",

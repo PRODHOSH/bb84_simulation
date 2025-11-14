@@ -12,7 +12,7 @@
 [![Vite](https://img.shields.io/badge/Vite-5+-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3+-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Click_Here-286EFF?style=for-the-badge)](https://prodhosh.github.io/bb84_simulation/)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Click_Here-286EFF?style=for-the-badge)](https://bb84-simulation.vercel.app/)
 [![GitHub Stars](https://img.shields.io/github/stars/PRODHOSH/bb84_simulation?style=for-the-badge&color=AA50FF)](https://github.com/PRODHOSH/bb84_simulation/stargazers)
 [![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)](LICENSE)
 
@@ -377,7 +377,7 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Now-286EFF?style=for-the-badge)](https://prodhosh.github.io/bb84_simulation/)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Now-286EFF?style=for-the-badge)](https://bb84-simulation.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/PRODHOSH/bb84_simulation)
 [![Portfolio](https://img.shields.io/badge/Portfolio-Visit-AA50FF?style=for-the-badge&logo=google-chrome&logoColor=white)](https://prodhosh.github.io/prodhosh-portfolio/)
 

@@ -5,12 +5,13 @@ import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { ArrowLeft, Play, RotateCcw, Info } from "lucide-react";
+import { ArrowLeft, Play, RotateCcw, Info, Zap, Activity, Eye } from "lucide-react";
 import PhotonScene from "@/components/simulation/PhotonScene";
 import { useSimulation } from "@/contexts/SimulationContext";
 import KeyResults from "@/components/simulation/KeyResults";
 import AnalyticsDashboard from "@/components/simulation/AnalyticsDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/ui/Footer";
 
 
@@ -29,15 +30,17 @@ const Simulation = () => {
 
   const [currentPhotonIndex, setCurrentPhotonIndex] = useState(-1);
   const [photonCount, setPhotonCount] = useState(16);
+  const [simulationSpeed, setSimulationSpeed] = useState(300);
+  const [showStats, setShowStats] = useState(true);
 
   useEffect(() => {
     if (isSimulating && currentPhotonIndex < photons.length - 1) {
       const timer = setTimeout(() => {
         setCurrentPhotonIndex(prev => prev + 1);
-      }, 300);
+      }, simulationSpeed);
       return () => clearTimeout(timer);
     }
-  }, [isSimulating, currentPhotonIndex, photons.length]);
+  }, [isSimulating, currentPhotonIndex, photons.length, simulationSpeed]);
 
   const handleStart = () => {
     setCurrentPhotonIndex(-1);
@@ -68,8 +71,14 @@ const Simulation = () => {
           {/* Header Section */}
           <div className="text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-sm text-primary mb-4">
-              <Play className="w-4 h-4" />
+              <Zap className="w-4 h-4 animate-pulse" />
               <span className="font-semibold">3D Quantum Simulator</span>
+              {isSimulating && (
+                <Badge variant="default" className="ml-2 animate-pulse">
+                  <Activity className="w-3 h-3 mr-1" />
+                  Live
+                </Badge>
+              )}
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-3 gradient-text">
               Quantum Key Distribution Simulator
@@ -111,9 +120,33 @@ const Simulation = () => {
                 </div>
               </div>
 
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="sim-speed" className="text-white/90 text-base font-medium">
+                    Simulation Speed
+                  </Label>
+                  <span className="text-xl font-bold text-accent">{simulationSpeed}ms</span>
+                </div>
+                <Slider
+                  id="sim-speed"
+                  min={100}
+                  max={1000}
+                  step={100}
+                  value={[simulationSpeed]}
+                  onValueChange={(value) => setSimulationSpeed(value[0])}
+                  disabled={isSimulating}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Fast (100ms)</span>
+                  <span>Slow (1000ms)</span>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between p-4 bg-accent/5 rounded-lg border border-accent/20">
                 <div className="flex-1">
-                  <Label htmlFor="eve-mode" className="cursor-pointer text-base font-medium">
+                  <Label htmlFor="eve-mode" className="cursor-pointer text-base font-medium flex items-center gap-2">
+                    <Eye className="w-4 h-4" />
                     Include Eavesdropper (Eve)
                   </Label>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -155,7 +188,28 @@ const Simulation = () => {
           {/* 3D Visualization */}
           {photons.length > 0 && (
             <>
-              <PhotonScene photons={photons} currentPhotonIndex={currentPhotonIndex} />
+              <div className="relative">
+                <PhotonScene photons={photons} currentPhotonIndex={currentPhotonIndex} />
+                
+                {/* Real-time Progress Indicator */}
+                {isSimulating && currentPhotonIndex < photons.length - 1 && (
+                  <div className="absolute top-4 right-4 bg-background/80 backdrop-blur-sm border border-primary/30 rounded-lg p-4 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <Activity className="w-5 h-5 text-primary animate-pulse" />
+                      <div>
+                        <p className="text-sm font-medium">Processing Photon</p>
+                        <p className="text-2xl font-bold text-primary">{currentPhotonIndex + 1} / {photons.length}</p>
+                      </div>
+                    </div>
+                    <div className="mt-3 h-2 bg-secondary/20 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300"
+                        style={{ width: `${((currentPhotonIndex + 1) / photons.length) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Legend */}
               <Card className="p-4">

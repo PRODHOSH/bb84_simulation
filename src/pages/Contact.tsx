@@ -238,8 +238,8 @@ const Contact = () => {
           <h3 className="text-lg font-bold mb-3 text-blue-400">Quick Response</h3>
           <p className="text-sm text-gray-300">
             💡 I typically respond within 24-48 hours. For urgent matters, feel free to reach out directly via email at{' '}
-            <a href="mailto:prodhosshan@gmail.com" className="text-blue-400 hover:text-blue-300 underline">
-              prodhosshan@gmail.com
+            <a href="mailto:prodhosh3@gmail.com" className="text-blue-400 hover:text-blue-300 underline">
+              prodhosh3@gmail.com
             </a>
           </p>
         </Card>

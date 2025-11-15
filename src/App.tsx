@@ -11,6 +11,7 @@ import Simulation from "./pages/Simulation";
 import Documentation from "./pages/Documentation";
 import Quiz from "./pages/Quiz";
 import Auth from "./pages/Auth";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Starfield from "@/components/ui/Starfield";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/theory" element={<Theory />} />
             <Route path="/simulation" element={<Simulation />} />
             <Route path="/documentation" element={<Documentation />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/quiz" element={<Quiz />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

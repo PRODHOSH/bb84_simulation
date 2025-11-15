@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Lock, Atom, Sparkles, Users, FileText, Trophy } from "lucide-react";
+import { ArrowRight, Lock, Atom, Sparkles, Users, FileText, Trophy, Mail } from "lucide-react";
 import Footer from "@/components/ui/Footer";
 
 
@@ -9,6 +9,21 @@ const Home = () => {
     <div className="min-h-screen quantum-bg relative overflow-hidden">
       {/* Subtle starfield overlay (pure CSS) */}
       <div className="starfield" />
+
+      {/* Top Navigation Bar */}
+      <div className="relative z-20 container mx-auto px-4 py-4">
+        <div className="flex justify-end">
+          <Link to="/contact">
+            <Button 
+              variant="outline"
+              className="border-primary/30 hover:bg-primary/10 hover:text-white group"
+            >
+              <Mail className="mr-2 w-4 h-4" />
+              Contact
+            </Button>
+          </Link>
+        </div>
+      </div>
 
   <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
         {/* Hero Section */}

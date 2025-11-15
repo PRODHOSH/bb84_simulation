@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, Lock, Shield, Radio, AlertTriangle, Users as UsersIcon } from "lucide-react";
+import { ArrowRight, ArrowLeft, Lock, Shield, Radio, AlertTriangle, Users as UsersIcon, CheckCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Footer from "@/components/ui/Footer";
+import ScrollToTop from "@/components/ui/ScrollToTop";
+import { useState } from "react";
 
 
 
 const Theory = () => {
+  const [activeStep, setActiveStep] = useState<number | null>(null);
+
   return (
     <div className="min-h-screen quantum-bg">
       <div className="starfield" />
@@ -130,60 +134,57 @@ const Theory = () => {
             </div>
             
             <ol className="space-y-4">
-              <li className="flex gap-4 p-4 bg-primary/5 rounded-lg border border-primary/10 hover:border-primary/30 transition-all">
-                <span className="flex-shrink-0 w-10 h-10 bg-primary/20 text-primary rounded-full flex items-center justify-center font-bold text-lg">1</span>
-                <div className="flex-1">
-                  <strong className="text-white/95 text-lg">Alice prepares photons</strong>
-                  <p className="text-white/75 mt-1">
-                    She randomly chooses bits (0 or 1) and randomly selects a basis (+ or ×) for each bit. She encodes the bit as a polarized photon.
-                  </p>
-                </div>
-              </li>
-              <li className="flex gap-4 p-4 bg-accent/5 rounded-lg border border-accent/10 hover:border-accent/30 transition-all">
-                <span className="flex-shrink-0 w-10 h-10 bg-accent/20 text-accent rounded-full flex items-center justify-center font-bold text-lg">2</span>
-                <div className="flex-1">
-                  <strong className="text-white/95 text-lg">Alice sends photons</strong>
-                  <p className="text-white/75 mt-1">
-                    She transmits the polarized photons to Bob through a quantum channel (e.g., optical fiber).
-                  </p>
-                </div>
-              </li>
-              <li className="flex gap-4 p-4 bg-secondary/5 rounded-lg border border-secondary/10 hover:border-secondary/30 transition-all">
-                <span className="flex-shrink-0 w-10 h-10 bg-secondary/20 text-secondary rounded-full flex items-center justify-center font-bold text-lg">3</span>
-                <div className="flex-1">
-                  <strong className="text-white/95 text-lg">Bob measures</strong>
-                  <p className="text-white/75 mt-1">
-                    Bob randomly chooses a basis for each incoming photon and measures it.
-                  </p>
-                </div>
-              </li>
-              <li className="flex gap-4 p-4 bg-primary/5 rounded-lg border border-primary/10 hover:border-primary/30 transition-all">
-                <span className="flex-shrink-0 w-10 h-10 bg-primary/20 text-primary rounded-full flex items-center justify-center font-bold text-lg">4</span>
-                <div className="flex-1">
-                  <strong className="text-white/95 text-lg">Basis reconciliation</strong>
-                  <p className="text-white/75 mt-1">
-                    After all photons are sent, Alice and Bob publicly compare their bases (not the bits!). They keep only the bits where their bases matched.
-                  </p>
-                </div>
-              </li>
-              <li className="flex gap-4 p-4 bg-accent/5 rounded-lg border border-accent/10 hover:border-accent/30 transition-all">
-                <span className="flex-shrink-0 w-10 h-10 bg-accent/20 text-accent rounded-full flex items-center justify-center font-bold text-lg">5</span>
-                <div className="flex-1">
-                  <strong className="text-white/95 text-lg">Error checking</strong>
-                  <p className="text-white/75 mt-1">
-                    They check a subset of bits to detect eavesdropping. If Eve intercepts photons, she introduces errors since she doesn't know the correct basis.
-                  </p>
-                </div>
-              </li>
-              <li className="flex gap-4 p-4 bg-secondary/5 rounded-lg border border-secondary/10 hover:border-secondary/30 transition-all">
-                <span className="flex-shrink-0 w-10 h-10 bg-secondary/20 text-secondary rounded-full flex items-center justify-center font-bold text-lg">6</span>
-                <div className="flex-1">
-                  <strong className="text-white/95 text-lg">Secret key</strong>
-                  <p className="text-white/75 mt-1">
-                    The remaining matching bits form the secure key for encryption.
-                  </p>
-                </div>
-              </li>
+              {[
+                {
+                  title: "Alice prepares photons",
+                  desc: "She randomly chooses bits (0 or 1) and randomly selects a basis (+ or ×) for each bit. She encodes the bit as a polarized photon.",
+                  color: "primary"
+                },
+                {
+                  title: "Alice sends photons",
+                  desc: "She transmits the polarized photons to Bob through a quantum channel (e.g., optical fiber).",
+                  color: "accent"
+                },
+                {
+                  title: "Bob measures",
+                  desc: "Bob randomly chooses a basis for each incoming photon and measures it.",
+                  color: "secondary"
+                },
+                {
+                  title: "Basis reconciliation",
+                  desc: "After all photons are sent, Alice and Bob publicly compare their bases (not the bits!). They keep only the bits where their bases matched.",
+                  color: "primary"
+                },
+                {
+                  title: "Error checking",
+                  desc: "They check a subset of bits to detect eavesdropping. If Eve intercepts photons, she introduces errors since she doesn't know the correct basis.",
+                  color: "accent"
+                },
+                {
+                  title: "Secret key",
+                  desc: "The remaining matching bits form the secure key for encryption.",
+                  color: "secondary"
+                }
+              ].map((step, index) => (
+                <li 
+                  key={index}
+                  className={`flex gap-4 p-4 bg-${step.color}/5 rounded-lg border border-${step.color}/10 hover:border-${step.color}/30 transition-all cursor-pointer transform hover:scale-[1.02] ${
+                    activeStep === index ? 'ring-2 ring-primary shadow-lg' : ''
+                  }`}
+                  onMouseEnter={() => setActiveStep(index)}
+                  onMouseLeave={() => setActiveStep(null)}
+                >
+                  <span className={`flex-shrink-0 w-10 h-10 bg-${step.color}/20 text-${step.color} rounded-full flex items-center justify-center font-bold text-lg ${
+                    activeStep === index ? 'scale-110' : ''
+                  } transition-transform`}>
+                    {activeStep === index ? <CheckCircle className="w-6 h-6" /> : index + 1}
+                  </span>
+                  <div className="flex-1">
+                    <strong className="text-white/95 text-lg">{step.title}</strong>
+                    <p className="text-white/75 mt-1">{step.desc}</p>
+                  </div>
+                </li>
+              ))}
             </ol>
           </Card>
 
@@ -215,6 +216,7 @@ const Theory = () => {
             </Link>
           </div>
         </div>
+        <ScrollToTop />
         <Footer />
       </div>
     </div>

@@ -14,12 +14,30 @@ import Auth from "./pages/Auth";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Starfield from "@/components/ui/Starfield";
+import LoadingScreen from "@/components/ui/LoadingScreen";
+import KeyboardShortcuts from "@/components/ui/KeyboardShortcuts";
+import { useState, useEffect } from "react";
 
 
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
@@ -28,6 +46,7 @@ const App = () => (
           {/* global SPA starfield overlay (behind content) */}
           <Starfield />
           <Sonner />
+          <KeyboardShortcuts />
           <HashRouter>
             <Routes>
             <Route path="/" element={<Home />} />
@@ -45,6 +64,7 @@ const App = () => (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

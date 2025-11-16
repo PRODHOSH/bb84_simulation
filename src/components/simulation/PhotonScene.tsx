@@ -28,7 +28,15 @@ const PhotonScene = ({ photons, currentPhotonIndex }: PhotonSceneProps) => {
   }, []);
   return (
     <div className="w-full h-[600px] bg-background rounded-lg overflow-hidden border border-border shadow-2xl">
-      <Canvas>
+      <Canvas
+        dpr={[1, 2]}
+        performance={{ min: 0.5 }}
+        gl={{ 
+          powerPreference: "high-performance",
+          antialias: true,
+          alpha: false 
+        }}
+      >
         <color attach="background" args={["#0a0a1a"]} />
         <PerspectiveCamera makeDefault position={[0, 3, 10]} fov={50} />
         

@@ -8,11 +8,23 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: 'dist',
     sourcemap: false,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
       output: {
-        manualChunks: undefined
-      }
-    }
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+          'ui-components': ['@radix-ui/react-dialog', '@radix-ui/react-toast', '@radix-ui/react-slot'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
   },
   server: {
     host: "::",
@@ -23,6 +35,9 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'three'],
   },
 }));
 

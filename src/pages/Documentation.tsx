@@ -6,283 +6,303 @@ import {
   FileText, 
   Download, 
   Presentation, 
-  Image as ImageIcon, 
   ArrowLeft,
-  ExternalLink,
-  Camera,
-  Zap,
-  Upload
+  Eye,
+  X,
+  User
 } from 'lucide-react';
 import Footer from '@/components/ui/Footer';
 
 const Documentation = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [pdfPreview, setPdfPreview] = useState<{ title: string, url: string } | null>(null);
 
-  // Placeholder images - replace with actual hardware photos
+  // Get base path for assets
+  const basePath = import.meta.env.BASE_URL;
+
+  const handleViewPDF = (title: string, url: string) => {
+    setPdfPreview({ title, url });
+  };
+
+  // Hardware images - will loop continuously (duplicate for seamless loop)
   const hardwareImages = [
     {
       id: 1,
-      title: 'Complete Setup',
-      description: 'Full quantum key distribution hardware setup',
-      url: '/images/hardware/setup.jpg',
-      placeholder: true
+      title: 'Complete BB84 Hardware Setup',
+      description: 'Full quantum key distribution system with laser source, polarization components, and detection units',
+      url: `${basePath}images/hardware/hardware_photo_1.jpg`
     },
     {
       id: 2,
-      title: 'Laser System',
-      description: 'Laser source for photon generation',
-      url: '/images/hardware/laser.jpg',
-      placeholder: true
+      title: 'Optical Polarization System',
+      description: 'Precision polarization filters and beam splitters for quantum state preparation',
+      url: `${basePath}images/hardware/hardware_photo_2.jpg`
     },
     {
       id: 3,
-      title: 'Polarization Filters',
-      description: 'Basis selection mechanism',
-      url: '/images/hardware/filters.jpg',
-      placeholder: true
+      title: 'Detection & Measurement Unit',
+      description: 'Single-photon detectors and quantum measurement apparatus',
+      url: `${basePath}images/hardware/hardware_photo_3.jpg`
     },
     {
       id: 4,
-      title: 'Detection Unit',
-      description: 'Photon detector and measurement apparatus',
-      url: '/images/hardware/detector.jpg',
-      placeholder: true
-    },
-    {
-      id: 5,
-      title: 'Control Electronics',
-      description: 'Control circuits and data processing',
-      url: '/images/hardware/electronics.jpg',
-      placeholder: true
-    },
-    {
-      id: 6,
-      title: 'Team Assembly',
-      description: 'Our team working on the hardware',
-      url: '/images/hardware/team.jpg',
-      placeholder: true
+      title: 'Control Electronics & Interface',
+      description: 'Electronic control systems and data acquisition interface for quantum communication',
+      url: `${basePath}images/hardware/hardware_photo_4.jpg`
     }
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Starfield Background */}
+    <div className="min-h-screen quantum-bg">
       <div className="starfield" />
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 py-8 relative z-10">
         
-        {/* Back Button */}
-        <Link to="/" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition-colors">
-          <ArrowLeft size={20} />
-          Back to Home
+        <Link to="/">
+          <Button variant="ghost" className="mb-6">
+            <ArrowLeft className="mr-2 w-4 h-4" />
+            Back to Home
+          </Button>
         </Link>
 
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-block mb-4 px-4 py-1.5 bg-blue-500/20 border border-blue-500/30 rounded-full">
-            <span className="text-blue-400 text-sm font-medium">📚 Project Resources</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-sm text-primary mb-4">
+            <FileText className="w-4 h-4" />
+            <span className="font-semibold">Project Resources</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 gradient-text">
+          <h1 className="text-4xl md:text-5xl font-bold mb-3 gradient-text">
             Documentation & Gallery
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg text-white/75 max-w-3xl mx-auto">
             Access our comprehensive project documentation, presentations, and hardware gallery
           </p>
         </div>
 
         {/* Documents Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
-            <FileText className="text-blue-400" size={32} />
-            Project Documents
-          </h2>
+        <div className="max-w-6xl mx-auto mb-20">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+              <FileText className="w-5 h-5 text-primary" />
+            </div>
+            <h2 className="text-3xl font-bold gradient-text">Project Documents</h2>
+          </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Project Report Card */}
-            <Card className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-blue-500/30 p-8 hover:border-blue-400/50 transition-all duration-300 group">
+            <Card className="p-8 bg-card/90 backdrop-blur-md border-primary/30 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 group">
               <div className="flex items-start gap-4 mb-6">
-                <div className="p-4 bg-blue-500/20 rounded-xl group-hover:bg-blue-500/30 transition-colors">
-                  <FileText size={32} className="text-blue-400" />
+                <div className="p-4 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl group-hover:scale-110 transition-transform">
+                  <FileText className="w-8 h-8 text-primary" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold mb-2">Project Report</h3>
-                  <p className="text-gray-400">
-                    Complete documentation of our BB84 implementation, methodology, and results
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Complete technical documentation of our BB84 quantum key distribution implementation
                   </p>
                 </div>
               </div>
               
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Format:</span>
-                  <span className="text-white font-medium">PDF</span>
+              {/* Created By */}
+              <div className="mb-6 p-4 bg-background/60 rounded-xl border border-border/50">
+                <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
+                  <User className="w-4 h-4" />
+                  <span className="font-medium">Created By</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Pages:</span>
-                  <span className="text-white font-medium">~50 pages</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Status:</span>
-                  <span className="text-yellow-400 font-medium">📝 Coming Soon</span>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Raghav</span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Vijay Nishal</span>
                 </div>
               </div>
 
-              <Button 
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500"
-                disabled
-              >
-                <Download size={18} className="mr-2" />
-                Download Report (Coming Soon)
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  className="flex-1 h-11 bg-primary/10 hover:bg-primary/20 border border-primary/30 hover:border-primary/50 text-primary font-semibold"
+                  onClick={() => handleViewPDF('Project Report', `${basePath}docs/physics_report.pdf`)}
+                >
+                  <Eye className="mr-2 w-4 h-4" />
+                  Preview
+                </Button>
+                <a 
+                  href={`${basePath}docs/physics_report.pdf`}
+                  download="BB84_Project_Report.pdf"
+                  className="flex-1"
+                >
+                  <Button className="w-full h-11 bg-primary hover:bg-primary/90 font-semibold shadow-lg shadow-primary/30">
+                    <Download className="mr-2 w-4 h-4" />
+                    Download
+                  </Button>
+                </a>
+              </div>
             </Card>
 
             {/* Presentation Card */}
-            <Card className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border-purple-500/30 p-8 hover:border-purple-400/50 transition-all duration-300 group">
+            <Card className="p-8 bg-card/90 backdrop-blur-md border-accent/30 hover:border-accent/50 hover:shadow-xl hover:shadow-accent/20 transition-all duration-300 group">
               <div className="flex items-start gap-4 mb-6">
-                <div className="p-4 bg-purple-500/20 rounded-xl group-hover:bg-purple-500/30 transition-colors">
-                  <Presentation size={32} className="text-purple-400" />
+                <div className="p-4 bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl group-hover:scale-110 transition-transform">
+                  <Presentation className="w-8 h-8 text-accent" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold mb-2">Project Presentation</h3>
-                  <p className="text-gray-400">
-                    Comprehensive slides covering theory, implementation, and demonstrations
+                  <h3 className="text-2xl font-bold mb-2">Presentation Slides</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Comprehensive slides covering quantum cryptography theory and practical implementation
                   </p>
                 </div>
               </div>
               
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Format:</span>
-                  <span className="text-white font-medium">PDF</span>
+              {/* Created By */}
+              <div className="mb-6 p-4 bg-background/60 rounded-xl border border-border/50">
+                <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
+                  <User className="w-4 h-4" />
+                  <span className="font-medium">Created By</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Slides:</span>
-                  <span className="text-white font-medium">~30 slides</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Status:</span>
-                  <span className="text-yellow-400 font-medium">📝 Coming Soon</span>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Sachin</span>
+                  <span className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Sudhir</span>
                 </div>
               </div>
 
-              <Button 
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500"
-                disabled
-              >
-                <Download size={18} className="mr-2" />
-                Download PPT (Coming Soon)
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  className="flex-1 h-11 bg-accent/10 hover:bg-accent/20 border border-accent/30 hover:border-accent/50 text-accent font-semibold"
+                  onClick={() => handleViewPDF('Presentation Slides', `${basePath}docs/physics_ppt.pdf`)}
+                >
+                  <Eye className="mr-2 w-4 h-4" />
+                  Preview
+                </Button>
+                <a 
+                  href={`${basePath}docs/physics_ppt.pdf`}
+                  download="BB84_Presentation.pdf"
+                  className="flex-1"
+                >
+                  <Button className="w-full h-11 bg-accent hover:bg-accent/90 font-semibold shadow-lg shadow-accent/30">
+                    <Download className="mr-2 w-4 h-4" />
+                    Download
+                  </Button>
+                </a>
+              </div>
             </Card>
           </div>
         </div>
 
         {/* Hardware Gallery Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
-            <Camera className="text-cyan-400" size={32} />
-            Hardware Gallery
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {hardwareImages.map((image) => (
-              <Card 
-                key={image.id}
-                className="bg-gradient-to-br from-gray-900/50 to-gray-800/50 border-gray-700/50 p-4 hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer"
-                onClick={() => image.placeholder ? null : setSelectedImage(image.url)}
-              >
-                <div className="relative aspect-video mb-4 bg-gray-800 rounded-lg overflow-hidden group-hover:ring-2 ring-cyan-400 transition-all">
-                  {image.placeholder ? (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <ImageIcon size={48} className="text-gray-600 mx-auto mb-2" />
-                        <p className="text-gray-500 text-sm">Photo Coming Soon</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
+        <div className="max-w-7xl mx-auto mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                <FileText className="w-5 h-5 text-orange-500" />
+              </div>
+              <h2 className="text-3xl font-bold gradient-text">Hardware Gallery</h2>
+            </div>
+          </div>
+
+          {/* Infinite Scrolling Images */}
+          <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-background/20 backdrop-blur-sm p-8 mb-6">
+            <style>{`
+              @keyframes scroll {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+              
+              .scroll-container {
+                animation: scroll 20s linear infinite;
+                width: fit-content;
+              }
+              
+              .scroll-container:hover {
+                animation-play-state: paused;
+              }
+            `}</style>
+            
+            <div className="flex gap-6 scroll-container">
+              {/* Duplicate images for seamless loop */}
+              {[...hardwareImages, ...hardwareImages, ...hardwareImages, ...hardwareImages].map((image, index) => (
+                <div 
+                  key={index}
+                  className="flex-shrink-0 w-[400px] group cursor-pointer"
+                >
+                  <Card className="overflow-hidden border-orange-500/30 hover:border-orange-500/60 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/20">
+                    <div className="relative aspect-video overflow-hidden">
                       <img 
                         src={image.url} 
                         alt={image.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                        <ExternalLink size={24} className="text-white" />
-                      </div>
-                    </>
-                  )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                    <div className="p-5 bg-card/90 backdrop-blur-sm">
+                      <h3 className="font-bold text-lg mb-2">{image.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {image.description}
+                      </p>
+                    </div>
+                  </Card>
                 </div>
-                <h3 className="text-lg font-bold mb-1">{image.title}</h3>
-                <p className="text-sm text-gray-400">{image.description}</p>
-              </Card>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Upload Instructions for Team */}
-        <Card className="bg-gradient-to-br from-yellow-900/20 to-orange-900/20 border-yellow-500/30 p-8">
-          <div className="flex items-start gap-4">
-            <Zap size={32} className="text-yellow-400 flex-shrink-0" />
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold mb-3 text-yellow-400 flex items-center gap-2">
-                <Upload size={24} />
-                For Team Members
-              </h3>
-              <p className="text-gray-300 mb-4">
-                To add the actual documents and hardware photos:
-              </p>
-              <div className="bg-black/30 rounded-lg p-4 space-y-3">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📄</span>
-                  <div>
-                    <p className="font-bold text-white mb-1">1. Add Project Report</p>
-                    <code className="text-sm text-cyan-400">public/docs/report.pdf</code>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📊</span>
-                  <div>
-                    <p className="font-bold text-white mb-1">2. Add Presentation</p>
-                    <code className="text-sm text-cyan-400">public/docs/presentation.pdf</code>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📸</span>
-                  <div>
-                    <p className="font-bold text-white mb-1">3. Add Hardware Photos</p>
-                    <code className="text-sm text-cyan-400">public/images/hardware/</code>
-                    <p className="text-sm text-gray-400 mt-1">Name files: setup.jpg, laser.jpg, filters.jpg, detector.jpg, electronics.jpg, team.jpg</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">⚙️</span>
-                  <div>
-                    <p className="font-bold text-white mb-1">4. Update Code</p>
-                    <p className="text-sm text-gray-400">Change <code className="text-cyan-400">placeholder: true</code> to <code className="text-cyan-400">placeholder: false</code> in <code className="text-cyan-400">Documentation.tsx</code></p>
-                  </div>
+          {/* Hardware Created By */}
+          <Card className="p-6 bg-card/80 backdrop-blur-md border-orange-500/30">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-orange-500/20 rounded-lg">
+                <User className="w-5 h-5 text-orange-500" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground mb-2">Hardware Engineering</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-bold">Created By</span>
+                  <span className="px-4 py-1.5 bg-orange-500/10 text-orange-500 rounded-full font-semibold">Joshwa</span>
                 </div>
               </div>
             </div>
-          </div>
-        </Card>
-
-      </div>
-
-      <Footer />
-
-      {/* Image Modal */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedImage(null)}
-        >
-          <img 
-            src={selectedImage} 
-            alt="Hardware" 
-            className="max-w-full max-h-full object-contain rounded-lg"
-          />
+          </Card>
         </div>
-      )}
+
+        {/* PDF Preview Modal */}
+        {pdfPreview && (
+          <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+            <div className="relative w-full max-w-6xl h-[90vh] bg-background rounded-2xl border border-border shadow-2xl overflow-hidden">
+              {/* Modal Header */}
+              <div className="absolute top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-10 p-4 flex items-center justify-between">
+                <h3 className="text-xl font-bold gradient-text">{pdfPreview.title}</h3>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={() => setPdfPreview(null)}
+                  className="hover:bg-destructive/20 hover:text-destructive"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              {/* PDF Embed */}
+              <div className="pt-16 h-full">
+                <iframe
+                  src={pdfPreview.url}
+                  className="w-full h-full"
+                  title={pdfPreview.title}
+                />
+              </div>
+
+              {/* Download Button */}
+              <div className="absolute bottom-4 right-4">
+                <a href={pdfPreview.url} download>
+                  <Button className="shadow-lg">
+                    <Download className="mr-2 w-4 h-4" />
+                    Download PDF
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <Footer />
+      </div>
     </div>
   );
 };

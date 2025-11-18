@@ -15,12 +15,14 @@ import Footer from '@/components/ui/Footer';
 
 const Documentation = () => {
   const [pdfPreview, setPdfPreview] = useState<{ title: string, url: string } | null>(null);
+  const [pdfError, setPdfError] = useState(false);
 
   // Get base path for assets
   const basePath = import.meta.env.BASE_URL;
 
   const handleViewPDF = (title: string, url: string) => {
     setPdfPreview({ title, url });
+    setPdfError(false);
   };
 
   // Hardware images - will loop continuously (duplicate for seamless loop)
@@ -280,12 +282,27 @@ const Documentation = () => {
               </div>
 
               {/* PDF Embed */}
-              <div className="pt-16 h-full">
-                <iframe
-                  src={pdfPreview.url}
-                  className="w-full h-full"
-                  title={pdfPreview.title}
-                />
+              <div className="pt-16 h-full bg-muted/10 relative">
+                {pdfError ? (
+                  <div className="flex flex-col items-center justify-center h-full gap-4">
+                    <FileText className="w-16 h-16 text-muted-foreground" />
+                    <p className="text-muted-foreground">Unable to preview PDF in browser</p>
+                    <a href={pdfPreview.url} download>
+                      <Button>
+                        <Download className="mr-2 w-4 h-4" />
+                        Download PDF Instead
+                      </Button>
+                    </a>
+                  </div>
+                ) : (
+                  <iframe
+                    src={`${pdfPreview.url}#toolbar=0&navpanes=0&scrollbar=1`}
+                    className="w-full h-full border-0"
+                    title={pdfPreview.title}
+                    allow="fullscreen"
+                    onError={() => setPdfError(true)}
+                  />
+                )}
               </div>
 
               {/* Download Button */}

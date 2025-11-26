@@ -36,21 +36,21 @@
 <table>
 <tr>
 <td width="50%">
-<img src="./public/images/demo/home-page.png" alt="Home Page"/>
+<img src="./public/images/demo/home-page.png" alt="Home Page" width="100%"/>
 <p align="center"><b>Home Page</b> - Quantum-themed landing</p>
 </td>
 <td width="50%">
-<img src="./public/images/demo/simulation-page.png" alt="Simulation Page"/>
+<img src="./public/images/demo/simulation-page.png" alt="Simulation Page" width="100%"/>
 <p align="center"><b>3D Simulation</b> - Interactive photon visualization</p>
 </td>
 </tr>
 <tr>
 <td width="50%">
-<img src="./public/images/demo/theory-page.png" alt="Theory Page"/>
+<img src="./public/images/demo/theory-page.png" alt="Theory Page" width="100%"/>
 <p align="center"><b>Theory</b> - Educational content</p>
 </td>
 <td width="50%">
-<img src="./public/images/demo/analytics-dashboard.png" alt="Analytics Dashboard"/>
+<img src="./public/images/demo/analytics-dashboard.png" alt="Analytics Dashboard" width="100%"/>
 <p align="center"><b>Analytics</b> - Real-time charts & metrics</p>
 </td>
 </tr>
@@ -238,33 +238,6 @@ Then run:
 
 ```bash
 docker-compose up -d
-```
-
-### Docker Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Docker Container                      │
-├─────────────────────────────────────────────────────────┤
-│  ┌─────────────────────────────────────────────────┐    │
-│  │              Nginx (Alpine)                      │    │
-│  │  - Serves static files from /dist               │    │
-│  │  - Gzip compression enabled                     │    │
-│  │  - SPA routing (fallback to index.html)         │    │
-│  │  - Asset caching (1 year for /assets/)          │    │
-│  │  - Security headers configured                  │    │
-│  └─────────────────────────────────────────────────┘    │
-│                         │                                │
-│                         ▼                                │
-│  ┌─────────────────────────────────────────────────┐    │
-│  │           Built React App (/dist)               │    │
-│  │  - Optimized production bundle                  │    │
-│  │  - Code-split chunks (react, three, ui)         │    │
-│  │  - Minified JS/CSS                              │    │
-│  └─────────────────────────────────────────────────┘    │
-│                                                          │
-│  Port 80 ──────────────────────────────► Host Port 3000 │
-└─────────────────────────────────────────────────────────┘
 ```
 
 ### Multi-Stage Build Process

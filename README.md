@@ -11,6 +11,7 @@
 [![Three.js](https://img.shields.io/badge/Three.js-3D-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5+-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3+-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Click_Here-286EFF?style=for-the-badge)](https://bb84-simulation.vercel.app/)
 [![GitHub Stars](https://img.shields.io/github/stars/PRODHOSH/bb84_simulation?style=for-the-badge&color=AA50FF)](https://github.com/PRODHOSH/bb84_simulation/stargazers)
@@ -20,7 +21,54 @@
 
 ---
 
-## � Overview
+## 🎬 Demo & Screenshots
+
+<div align="center">
+
+### 🌟 3D Quantum Simulation in Action
+
+<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/simulation-demo.gif" alt="3D Simulation Demo" width="80%"/>
+
+*Real-time photon transmission with polarization states*
+
+</div>
+
+<table>
+<tr>
+<td width="50%">
+<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/home-page.png" alt="Home Page"/>
+<p align="center"><b>Home Page</b> - Quantum-themed landing</p>
+</td>
+<td width="50%">
+<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/simulation-page.png" alt="Simulation Page"/>
+<p align="center"><b>3D Simulation</b> - Interactive photon visualization</p>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/theory-page.png" alt="Theory Page"/>
+<p align="center"><b>Theory</b> - Educational content</p>
+</td>
+<td width="50%">
+<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/analytics-dashboard.png" alt="Analytics Dashboard"/>
+<p align="center"><b>Analytics</b> - Real-time charts & metrics</p>
+</td>
+</tr>
+</table>
+
+<div align="center">
+
+### 🔬 Photon Polarization States
+
+<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/polarization-states.png" alt="Polarization States" width="60%"/>
+
+*Four quantum polarization states: Vertical, Horizontal, Diagonal, Anti-diagonal*
+
+</div>
+
+---
+
+## 🔭 Overview
 
 > **Experience quantum cryptography like never before** - Watch individual photons travel through space in real-time 3D as they establish an unbreakable secret key!
 
@@ -158,6 +206,78 @@ npm run preview
 
 ---
 
+## 🐳 Docker Deployment
+
+### Quick Start with Docker
+
+```bash
+# Build the Docker image
+docker build -t bb84-simulation .
+
+# Run the container
+docker run -p 3000:80 bb84-simulation
+
+# Access at http://localhost:3000
+```
+
+### Docker Compose (Optional)
+
+Create a `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+services:
+  bb84-simulator:
+    build: .
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+```
+
+Then run:
+
+```bash
+docker-compose up -d
+```
+
+### Docker Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Docker Container                      │
+├─────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────┐    │
+│  │              Nginx (Alpine)                      │    │
+│  │  - Serves static files from /dist               │    │
+│  │  - Gzip compression enabled                     │    │
+│  │  - SPA routing (fallback to index.html)         │    │
+│  │  - Asset caching (1 year for /assets/)          │    │
+│  │  - Security headers configured                  │    │
+│  └─────────────────────────────────────────────────┘    │
+│                         │                                │
+│                         ▼                                │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │           Built React App (/dist)               │    │
+│  │  - Optimized production bundle                  │    │
+│  │  - Code-split chunks (react, three, ui)         │    │
+│  │  - Minified JS/CSS                              │    │
+│  └─────────────────────────────────────────────────┘    │
+│                                                          │
+│  Port 80 ──────────────────────────────► Host Port 3000 │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Multi-Stage Build Process
+
+| Stage | Base Image | Purpose |
+|-------|------------|---------|
+| **Builder** | `node:20-alpine` | Install deps, build app |
+| **Production** | `nginx:alpine` | Serve static files |
+
+**Final Image Size**: ~50MB (optimized Alpine images)
+
+---
+
 ## 🎯 How to Use
 
 <div align="center">
@@ -241,16 +361,22 @@ graph TB
 ![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/-Tailwind-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
 ![Shadcn/ui](https://img.shields.io/badge/-Shadcn/ui-000000?style=flat-square&logo=shadcnui&logoColor=white)
+![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/-Nginx-009639?style=flat-square&logo=nginx&logoColor=white)
+![Supabase](https://img.shields.io/badge/-Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
 
 </div>
 
-**Frontend Framework**: React 18 with TypeScript  
-**3D Graphics**: Three.js + React Three Fiber  
-**Build Tool**: Vite 5  
-**Styling**: Tailwind CSS + Shadcn/ui components  
-**State Management**: React Context API  
-**Animations**: Framer Motion  
-**Routing**: React Router v6  
+| Category | Technologies |
+|----------|--------------|
+| **Frontend** | React 18, TypeScript 5, Vite 5 |
+| **3D Graphics** | Three.js, React Three Fiber, React Three Drei |
+| **Styling** | Tailwind CSS, Shadcn/ui, Radix UI |
+| **State** | React Context, TanStack Query |
+| **Backend** | Supabase (PostgreSQL, Auth) |
+| **Charts** | Recharts |
+| **Routing** | React Router v6 |
+| **Deployment** | Docker, Nginx, Vercel |  
 
 ---
 

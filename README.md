@@ -27,7 +27,7 @@
 
 ### 🌟 3D Quantum Simulation in Action
 
-<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/simulation-demo.gif" alt="3D Simulation Demo" width="80%"/>
+<img src="./public/images/demo/simulation-demo.gif" alt="3D Simulation Demo" width="80%"/>
 
 *Real-time photon transmission with polarization states*
 
@@ -36,21 +36,21 @@
 <table>
 <tr>
 <td width="50%">
-<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/home-page.png" alt="Home Page"/>
+<img src="./public/images/demo/home-page.png" alt="Home Page"/>
 <p align="center"><b>Home Page</b> - Quantum-themed landing</p>
 </td>
 <td width="50%">
-<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/simulation-page.png" alt="Simulation Page"/>
+<img src="./public/images/demo/simulation-page.png" alt="Simulation Page"/>
 <p align="center"><b>3D Simulation</b> - Interactive photon visualization</p>
 </td>
 </tr>
 <tr>
 <td width="50%">
-<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/theory-page.png" alt="Theory Page"/>
+<img src="./public/images/demo/theory-page.png" alt="Theory Page"/>
 <p align="center"><b>Theory</b> - Educational content</p>
 </td>
 <td width="50%">
-<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/analytics-dashboard.png" alt="Analytics Dashboard"/>
+<img src="./public/images/demo/analytics-dashboard.png" alt="Analytics Dashboard"/>
 <p align="center"><b>Analytics</b> - Real-time charts & metrics</p>
 </td>
 </tr>
@@ -60,7 +60,7 @@
 
 ### 🔬 Photon Polarization States
 
-<img src="https://raw.githubusercontent.com/PRODHOSH/bb84_simulation/main/public/images/demo/polarization-states.png" alt="Polarization States" width="60%"/>
+<img src="./public/images/demo/polarization-states.png" alt="Polarization States" width="60%"/>
 
 *Four quantum polarization states: Vertical, Horizontal, Diagonal, Anti-diagonal*
 

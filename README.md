@@ -169,60 +169,55 @@ Traditional encryption can be broken with enough computing power. **Quantum Key 
 
 ### Prerequisites
 
-```bash
-Node.js 18+ and npm/yarn/bun
-```
+Choose one of the following:
+- **Node.js 18+** with npm/yarn/bun
+- **Docker** (no Node.js required)
 
-### Installation
+### Option 1: Using Node.js
 
 ```bash
 # Clone the repository
 git clone https://github.com/PRODHOSH/bb84_simulation.git
-
-# Navigate to project
 cd bb84_simulation
 
 # Install dependencies
 npm install
-# or
-yarn install
-# or
-bun install
 
 # Start development server
 npm run dev
-# or
-yarn dev
-# or
-bun dev
 ```
 
-### Build for Production
+### Option 2: Using Docker 🐳
 
 ```bash
-npm run build
-npm run preview
-```
+# Clone the repository
+git clone https://github.com/PRODHOSH/bb84_simulation.git
+cd bb84_simulation
 
----
-
-## 🐳 Docker Deployment
-
-### Quick Start with Docker
-
-```bash
-# Build the Docker image
+# Build and run with Docker
 docker build -t bb84-simulation .
-
-# Run the container
 docker run -p 3000:80 bb84-simulation
 
 # Access at http://localhost:3000
 ```
 
-### Docker Compose (Optional)
+### Build for Production
 
-Create a `docker-compose.yml`:
+```bash
+# Node.js
+npm run build
+npm run preview
+
+# Or with Docker
+docker build -t bb84-simulation .
+docker run -d -p 3000:80 bb84-simulation
+```
+
+---
+
+## 🐳 Docker Compose (Optional)
+
+For easier container management, create a `docker-compose.yml`:
 
 ```yaml
 version: '3.8'

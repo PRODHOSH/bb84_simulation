@@ -13,5 +13,7 @@ Allow: /
 User-agent: *
 Allow: /
 
+Sitemap: https://bb84-simulation.vercel.app/sitemap.xml
+
 
 
